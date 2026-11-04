@@ -1,0 +1,814 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Mayvanna Beauty Studio | Reportes</title>
+
+    <!-- ESTILOS GENERALES -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/agendapro-dark.css">
+
+    <!-- TEMA MAYVANNA -->
+    <link
+        rel="stylesheet"
+        href="css/mayvanna-theme.css?v=4"
+    >
+
+    <!-- NÓMINA Y COMISIONES -->
+    <link
+        rel="stylesheet"
+        href="css/mayvanna-payroll.css?v=1"
+    >
+    <link
+        rel="stylesheet"
+        href="css/mayvanna-payroll-detail.css?v=2"
+    >
+
+    <style>
+        /* =========================================
+           CALENDARIO DE REPORTES
+        ========================================= */
+
+        .report-calendar-panel[hidden],
+        .report-calendar-error[hidden] {
+            display: none !important;
+        }
+
+        .report-calendar-panel {
+            display: flex;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+            margin-top: 16px;
+            padding: 16px;
+            background: #f1eeea;
+            border: 1px solid #dcd2d1;
+            border-radius: 12px;
+        }
+
+        .report-calendar-field {
+            display: flex;
+            flex: 1 1 160px;
+            flex-direction: column;
+            gap: 7px;
+            min-width: 0;
+        }
+
+        .report-calendar-field label {
+            color: #500e1d;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .report-calendar-field input {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 43px;
+            padding: 0 12px;
+            background: #fff;
+            color: #500e1d;
+            border: 1px solid #dcd2d1;
+            border-radius: 9px;
+            font: inherit;
+            font-size: 13px;
+            color-scheme: light;
+        }
+
+        .report-calendar-field input:focus {
+            outline: 2px solid #c6a9af;
+            outline-offset: 1px;
+            border-color: #500e1d;
+        }
+
+        .report-calendar-apply {
+            min-height: 43px;
+            padding: 0 18px;
+            background: #500e1d;
+            color: #fff;
+            border: 1px solid #500e1d;
+            border-radius: 9px;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .report-calendar-apply:hover {
+            background: #70283a;
+        }
+
+        .report-calendar-error {
+            width: 100%;
+            margin: 0;
+            color: #b91c1c;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* =========================================
+           PAGOS AL PERSONAL
+        ========================================= */
+
+        .staff-payroll-section {
+            margin-top: 24px;
+        }
+
+        .staff-payroll-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .staff-payroll-heading h2 {
+            margin: 0 0 6px;
+            color: #500e1d;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .staff-payroll-heading p {
+            margin: 0;
+            color: #766b70;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /*
+         * Estos contenedores se conservan para
+         * compatibilidad con js/reports.js y
+         * js/mayvanna-financial-report.js.
+         *
+         * La presentación visible de la nómina
+         * individual utiliza #mayvannaPayrollDetail.
+         */
+
+        .staff-payroll-grid,
+        .staff-payroll-list,
+        .staff-payroll-note {
+            display: none !important;
+        }
+
+        .staff-payroll-grid {
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .staff-payroll-list {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .staff-payroll-stat,
+        .staff-payroll-card {
+            padding: 20px;
+            background: #fff;
+            color: #500e1d;
+            border: 1px solid #dcd2d1;
+            border-radius: 12px;
+        }
+
+        .staff-payroll-stat span {
+            display: block;
+            margin-bottom: 10px;
+            color: #766b70;
+            font-size: 12px;
+        }
+
+        .staff-payroll-stat strong {
+            display: block;
+            font-size: clamp(20px, 3vw, 27px);
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .staff-payroll-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .staff-payroll-avatar {
+            display: grid;
+            place-items: center;
+            flex: 0 0 44px;
+            height: 44px;
+            border: 1px solid #dcd2d1;
+            border-radius: 10px;
+            background: #f1eeea;
+            color: #500e1d;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .staff-payroll-person {
+            min-width: 0;
+        }
+
+        .staff-payroll-person strong {
+            display: block;
+            color: #500e1d;
+            font-size: 14px;
+        }
+
+        .staff-payroll-person span {
+            display: block;
+            margin-top: 4px;
+            color: #766b70;
+            font-size: 12px;
+        }
+
+        .staff-payroll-amount {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 0;
+            border-top: 1px solid #dcd2d1;
+            border-bottom: 1px solid #dcd2d1;
+        }
+
+        .staff-payroll-amount span {
+            color: #766b70;
+            font-size: 12px;
+        }
+
+        .staff-payroll-amount strong {
+            font-size: 21px;
+            overflow-wrap: anywhere;
+            text-align: right;
+        }
+
+        .staff-payroll-details {
+            margin-top: 14px;
+        }
+
+        .staff-payroll-details summary {
+            cursor: pointer;
+            color: #500e1d;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .staff-payroll-detail-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 11px 0;
+            border-bottom: 1px solid #e5ddda;
+            font-size: 12px;
+        }
+
+        .staff-payroll-detail-row span {
+            color: #766b70;
+        }
+
+        .staff-payroll-detail-row strong {
+            text-align: right;
+        }
+
+        .staff-payroll-note {
+            margin: 15px 0 0;
+            color: #766b70;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .staff-payroll-empty {
+            padding: 24px;
+            border: 1px solid #dcd2d1;
+            border-radius: 12px;
+            background: #f1eeea;
+            color: #766b70;
+            font-size: 13px;
+        }
+
+        /* =========================================
+           RESUMEN FINANCIERO
+        ========================================= */
+
+        .mayvanna-financial-section {
+            margin: 24px 0;
+            padding: 24px;
+            background: #f1eeea;
+            border: 1px solid #dcd2d1;
+            border-radius: 14px;
+        }
+
+        .mayvanna-financial-section h2 {
+            color: #500e1d;
+        }
+
+        /* =========================================
+           CONTENEDOR DEL DESGLOSE INDIVIDUAL
+        ========================================= */
+
+        #mayvannaPayrollDetail {
+            display: grid;
+            gap: 18px;
+            width: 100%;
+            min-width: 0;
+            margin-top: 18px;
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 800px) {
+            .staff-payroll-grid,
+            .staff-payroll-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .report-calendar-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .report-calendar-field,
+            .report-calendar-apply {
+                width: 100%;
+            }
+
+            .staff-payroll-heading {
+                flex-direction: column;
+            }
+
+            .mayvanna-financial-section {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =========================================
+         MENÚ LATERAL
+    ========================================= -->
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            Mayvanna
+        </div>
+
+        <span class="sidebar-label">
+            Administración
+        </span>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="sidebar-link">
+                <span>▣</span> Dashboard
+            </a>
+
+            <a href="citas.html" class="sidebar-link">
+                <span>◷</span> Citas
+            </a>
+
+            <a href="clientes.html" class="sidebar-link">
+                <span>♙</span> Clientes
+            </a>
+
+            <a href="barberos.html" class="sidebar-link">
+                <span>♧</span> Personal
+            </a>
+
+            <a href="servicios.html" class="sidebar-link">
+                <span>≡</span> Servicios
+            </a>
+
+            <a href="fidelidad.html" class="sidebar-link">
+                <span>★</span> Fidelidad
+            </a>
+
+            <a
+                href="reportes.html"
+                class="sidebar-link active"
+                aria-current="page"
+            >
+                <span>↗</span> Reportes
+            </a>
+        </nav>
+    </aside>
+
+    <!-- =========================================
+         CONTENIDO PRINCIPAL
+    ========================================= -->
+
+    <main class="main">
+
+        <header class="topbar">
+            <h2>Reportes</h2>
+
+            <div class="admin-user">
+                <span>Administrador</span>
+                <div class="avatar">A</div>
+            </div>
+        </header>
+
+        <div class="content">
+
+            <div class="page-heading">
+                <div>
+                    <h1>Reportes</h1>
+                    <p>
+                        Consulta ingresos, actividad,
+                        rendimiento y comisiones del personal.
+                    </p>
+                </div>
+            </div>
+
+            <!-- =================================
+                 FILTROS DE PERÍODO
+            ================================= -->
+
+            <section class="module-toolbar">
+
+                <div>
+                    <strong class="module-toolbar-title">
+                        Período
+                    </strong>
+
+                    <span
+                        class="module-toolbar-description"
+                        id="reportDateRange"
+                    >
+                        Últimos 7 días
+                    </span>
+                </div>
+
+                <div class="module-filters">
+
+                    <button
+                        type="button"
+                        class="filter"
+                        data-period="today"
+                    >
+                        Hoy
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter active"
+                        data-period="week"
+                        aria-pressed="true"
+                    >
+                        7 días
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter"
+                        data-period="month"
+                    >
+                        30 días
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter"
+                        data-period="all"
+                    >
+                        Todo
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter"
+                        data-period="custom"
+                        aria-controls="reportCalendarPanel"
+                        aria-expanded="false"
+                    >
+                        📅 Calendario
+                    </button>
+
+                </div>
+
+                <!-- CALENDARIO PERSONALIZADO -->
+
+                <div
+                    class="report-calendar-panel"
+                    id="reportCalendarPanel"
+                    hidden
+                >
+
+                    <div class="report-calendar-field">
+                        <label for="reportStartDate">
+                            Desde
+                        </label>
+
+                        <input
+                            type="date"
+                            id="reportStartDate"
+                        >
+                    </div>
+
+                    <div class="report-calendar-field">
+                        <label for="reportEndDate">
+                            Hasta
+                        </label>
+
+                        <input
+                            type="date"
+                            id="reportEndDate"
+                        >
+                    </div>
+
+                    <button
+                        type="button"
+                        class="report-calendar-apply"
+                        id="applyReportDates"
+                    >
+                        Aplicar filtro
+                    </button>
+
+                    <p
+                        class="report-calendar-error"
+                        id="reportCalendarError"
+                        role="alert"
+                        hidden
+                    ></p>
+
+                </div>
+            </section>
+
+            <!-- =================================
+                 RESUMEN GENERAL
+            ================================= -->
+
+            <section
+                class="module-summary"
+                id="reportSummary"
+                aria-label="Resumen de reportes"
+            ></section>
+
+            <!-- =================================
+                 RESUMEN FINANCIERO
+            ================================= -->
+
+            <section
+                class="mayvanna-financial-section"
+                id="mayvannaFinancialReport"
+                aria-label="Resumen financiero y comisiones"
+            >
+                <h2>
+                    Resumen financiero y comisiones
+                </h2>
+
+                <p>
+                    Cargando ingresos, comisiones,
+                    nómina y ganancias del negocio...
+                </p>
+            </section>
+
+            <!-- =================================
+                 REPORTES GENERALES
+            ================================= -->
+
+            <section
+                class="module-card-grid report-unified-grid"
+            >
+
+                <!-- INGRESOS -->
+
+                <article
+                    class="unified-card report-module-card"
+                >
+                    <div class="unified-card-header">
+                        <div class="unified-card-person">
+                            <div class="unified-card-avatar">
+                                $
+                            </div>
+
+                            <div class="unified-card-title">
+                                <h3>Ingresos</h3>
+                                <span>
+                                    Cobros y métodos de pago
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="report-simple-content"
+                        id="revenueReport"
+                    ></div>
+                </article>
+
+                <!-- CITAS -->
+
+                <article
+                    class="unified-card report-module-card"
+                >
+                    <div class="unified-card-header">
+                        <div class="unified-card-person">
+                            <div class="unified-card-avatar">
+                                ◷
+                            </div>
+
+                            <div class="unified-card-title">
+                                <h3>Citas</h3>
+                                <span>Estados</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="report-simple-content"
+                        id="statusReport"
+                    ></div>
+                </article>
+
+                <!-- SERVICIOS -->
+
+                <article
+                    class="unified-card report-module-card"
+                >
+                    <div class="unified-card-header">
+                        <div class="unified-card-person">
+                            <div class="unified-card-avatar">
+                                ≡
+                            </div>
+
+                            <div class="unified-card-title">
+                                <h3>Servicios</h3>
+                                <span>
+                                    Actividad e ingresos
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="report-simple-content"
+                        id="servicesReport"
+                    ></div>
+                </article>
+
+                <!-- PERSONAL -->
+
+                <article
+                    class="unified-card report-module-card"
+                >
+                    <div class="unified-card-header">
+                        <div class="unified-card-person">
+                            <div class="unified-card-avatar">
+                                ♧
+                            </div>
+
+                            <div class="unified-card-title">
+                                <h3>Personal</h3>
+                                <span>
+                                    Actividad e ingresos
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="report-simple-content"
+                        id="barbersReport"
+                    ></div>
+                </article>
+
+                <!-- ORIGEN DE CITAS -->
+
+                <article
+                    class="
+                        unified-card
+                        report-module-card
+                        report-origin-card-wide
+                    "
+                >
+                    <div class="unified-card-header">
+                        <div class="unified-card-person">
+                            <div class="unified-card-avatar">
+                                ↗
+                            </div>
+
+                            <div class="unified-card-title">
+                                <h3>Origen de citas</h3>
+                                <span>Canales</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="report-simple-content"
+                        id="originsReport"
+                    ></div>
+                </article>
+
+            </section>
+
+            <!-- =================================
+                 PAGOS AL PERSONAL
+            ================================= -->
+
+            <section
+                class="staff-payroll-section"
+                aria-labelledby="staffPayrollTitle"
+            >
+
+                <div class="staff-payroll-heading">
+                    <div>
+                        <h2 id="staffPayrollTitle">
+                            Pagos al personal
+                        </h2>
+
+                        <p>
+                            Consulta por profesional las
+                            citas cobradas, servicios,
+                            comisiones generadas, pagos
+                            realizados y saldos pendientes.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- COMPATIBILIDAD CON REPORTES -->
+
+                <div
+                    class="staff-payroll-grid"
+                    id="staffPayrollSummary"
+                ></div>
+
+                <div
+                    class="staff-payroll-list"
+                    id="staffPayrollList"
+                ></div>
+
+                <p
+                    class="staff-payroll-note"
+                    id="staffPayrollNote"
+                ></p>
+
+                <!-- DESGLOSE INDIVIDUAL VISIBLE -->
+
+                <div
+                    id="mayvannaPayrollDetail"
+                    aria-label="Nómina detallada por profesional"
+                >
+                    <div class="staff-payroll-empty">
+                        Cargando comisiones individuales
+                        y pagos al personal...
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+</div>
+
+<!-- NOTIFICACIONES -->
+
+<div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+></div>
+
+<!-- =========================================
+     SCRIPTS
+========================================= -->
+
+<!-- REPORTES GENERALES -->
+<script
+    type="module"
+    src="js/reports.js"
+></script>
+
+<!-- RESUMEN FINANCIERO -->
+<script
+    type="module"
+    src="js/mayvanna-financial-report.js?v=2"
+></script>
+
+<!-- DESGLOSE INDIVIDUAL DE COMISIONES -->
+<script
+    type="module"
+    src="js/mayvanna-payroll-detail.js?v=2"
+></script>
+
+</body>
+</html>

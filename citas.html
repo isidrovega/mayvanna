@@ -1,0 +1,879 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#171717"
+    >
+
+    <meta
+        name="description"
+        content="AgendaPro: administración de citas, clientes, personal y servicios."
+    >
+
+    <title>VARDEN | Citas</title>
+
+    <!-- ESTILOS GENERALES -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/appointments-calendar.css">
+    <link rel="stylesheet" href="css/agendapro-dark.css">
+
+
+    <!-- CALENDARIO MENSUAL -->
+    <link
+        rel="stylesheet"
+        href="css/appointments-calendar.css"
+    >
+
+<link rel="stylesheet" href="css/mayvanna-theme.css?v=4">
+<link rel="stylesheet" href="css/mayvanna-commissions-layout.css?v=1">
+</head>
+<script src="js/appointments-dashboard-filter.js"></script>
+<script
+    type="module"
+    src="js/multi-service-addon.js"
+></script>
+<body>
+
+<div class="app">
+
+    <!-- =====================================================
+         MENÚ LATERAL
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+            <strong>VARDEN</strong>
+        </div>
+
+        <span class="sidebar-label">
+            Administración
+        </span>
+
+        <nav
+            class="sidebar-nav"
+            aria-label="Navegación principal"
+        >
+
+            <a
+                href="index.html"
+                class="sidebar-link"
+            >
+                <span aria-hidden="true">▣</span>
+                Dashboard
+            </a>
+
+            <a
+                href="citas.html"
+                class="sidebar-link active"
+                aria-current="page"
+            >
+                <span aria-hidden="true">◷</span>
+                Citas
+            </a>
+
+            <a
+                href="clientes.html"
+                class="sidebar-link"
+            >
+                <span aria-hidden="true">♙</span>
+                Clientes
+            </a>
+
+            <a
+                href="barberos.html"
+                class="sidebar-link"
+            >
+                <span aria-hidden="true">♧</span>
+                Personal
+            </a>
+
+            <a
+                href="servicios.html"
+                class="sidebar-link"
+            >
+                <span aria-hidden="true">≡</span>
+                Servicios
+            </a>
+
+            <a
+                href="fidelidad.html"
+                class="sidebar-link"
+            >
+                <span aria-hidden="true">★</span>
+                Fidelidad
+            </a>
+
+            <a
+                href="reportes.html"
+                class="sidebar-link"
+            >
+                <span aria-hidden="true">↗</span>
+                Reportes
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- =====================================================
+         CONTENIDO PRINCIPAL
+    ====================================================== -->
+
+    <main class="main">
+
+        <!-- BARRA SUPERIOR -->
+
+        <header class="topbar">
+
+            <h2>Citas</h2>
+
+            <div class="admin-user">
+
+                <span>Administrador</span>
+
+                <div
+                    class="avatar"
+                    aria-label="Administrador"
+                >
+                    A
+                </div>
+
+            </div>
+
+        </header>
+
+        <div class="content">
+
+            <!-- =================================================
+                 ENCABEZADO
+            ================================================== -->
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h1>Gestión de citas</h1>
+
+                    <p>
+                        Organiza reservaciones, consulta la
+                        disponibilidad y administra tu agenda.
+                    </p>
+
+                </div>
+
+                <button
+                    class="btn btn-dark"
+                    id="newAppointmentButton"
+                    type="button"
+                >
+                    + Nueva cita
+                </button>
+
+            </div>
+
+            <!-- =================================================
+                 CALENDARIO MENSUAL
+            ================================================== -->
+
+            <section
+                class="agenda-calendar panel"
+                id="agendaCalendarSection"
+                aria-labelledby="calendarSectionTitle"
+            >
+
+                <!-- ENCABEZADO DEL CALENDARIO -->
+
+                <div class="agenda-calendar-header">
+
+                    <div>
+
+                        <h3 id="calendarSectionTitle">
+                            Calendario de citas
+                        </h3>
+
+                        <p>
+                            Visualiza las reservaciones y
+                            selecciona un día para consultar
+                            sus detalles.
+                        </p>
+
+                    </div>
+
+                    <div class="agenda-calendar-navigation">
+
+                        <button
+                            type="button"
+                            class="btn btn-outline"
+                            id="calendarPreviousMonth"
+                            aria-label="Mes anterior"
+                            title="Mes anterior"
+                        >
+                            ‹
+                        </button>
+
+                        <strong
+                            id="calendarMonthLabel"
+                            aria-live="polite"
+                        >
+                            Calendario
+                        </strong>
+
+                        <button
+                            type="button"
+                            class="btn btn-outline"
+                            id="calendarNextMonth"
+                            aria-label="Mes siguiente"
+                            title="Mes siguiente"
+                        >
+                            ›
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-outline"
+                            id="calendarTodayButton"
+                        >
+                            Hoy
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- FILTROS DEL CALENDARIO -->
+
+                <div class="agenda-calendar-filters">
+
+                    <div class="field">
+
+                        <label for="calendarStaffFilter">
+                            Profesional
+                        </label>
+
+                        <select id="calendarStaffFilter">
+
+                            <option value="all">
+                                Todo el personal
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="calendarStatusFilter">
+                            Estado
+                        </label>
+
+                        <select id="calendarStatusFilter">
+
+                            <option value="all">
+                                Todos los estados
+                            </option>
+
+                            <option value="pending">
+                                Pendientes
+                            </option>
+
+                            <option value="confirmed">
+                                Confirmadas
+                            </option>
+
+                            <option value="completed">
+                                Completadas
+                            </option>
+
+                            <option value="cancelled">
+                                Canceladas
+                            </option>
+
+                            <option value="no-show">
+                                No asistió
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="calendarStartDate">
+                            Desde
+                        </label>
+
+                        <input
+                            type="date"
+                            id="calendarStartDate"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="calendarEndDate">
+                            Hasta
+                        </label>
+
+                        <input
+                            type="date"
+                            id="calendarEndDate"
+                        >
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn btn-outline"
+                        id="calendarClearFilters"
+                    >
+                        Limpiar filtros
+                    </button>
+
+                </div>
+
+                <!-- DÍAS DE LA SEMANA -->
+
+                <div
+                    class="agenda-calendar-weekdays"
+                    aria-hidden="true"
+                >
+
+                    <span>Lun</span>
+                    <span>Mar</span>
+                    <span>Mié</span>
+                    <span>Jue</span>
+                    <span>Vie</span>
+                    <span>Sáb</span>
+                    <span>Dom</span>
+
+                </div>
+
+                <!-- CUADRÍCULA DEL CALENDARIO -->
+
+                <div
+                    class="agenda-calendar-grid"
+                    id="appointmentCalendar"
+                    aria-label="Calendario mensual de citas"
+                ></div>
+
+                <!-- DETALLE DEL DÍA SELECCIONADO -->
+
+                <div class="agenda-calendar-details">
+
+                    <div class="agenda-calendar-details-header">
+
+                        <div>
+
+                            <h3
+                                id="calendarSelectedDateLabel"
+                            >
+                                Citas del día
+                            </h3>
+
+                            <p
+                                id="calendarSelectedDateCount"
+                                aria-live="polite"
+                            >
+                                Selecciona una fecha para
+                                consultar sus citas.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="calendarDayAppointments"
+                    ></div>
+
+                </div>
+
+            </section>
+
+            <!-- =================================================
+                 FILTROS DE LA TABLA
+            ================================================== -->
+
+            <section
+                aria-label="Listado de citas"
+            >
+
+                <div class="page-heading">
+
+                    <div>
+
+                        <h2>Listado de citas</h2>
+
+                        <p>
+                            Consulta y administra todas
+                            las reservaciones registradas.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div
+                    class="filters"
+                    role="group"
+                    aria-label="Filtrar citas por estado"
+                >
+
+                    <button
+                        class="filter active"
+                        data-filter="all"
+                        type="button"
+                    >
+                        Todas
+                    </button>
+
+                    <button
+                        class="filter"
+                        data-filter="today"
+                        type="button"
+                    >
+                        Hoy
+                    </button>
+
+                    <button
+                        class="filter"
+                        data-filter="pending"
+                        type="button"
+                    >
+                        Pendientes
+                    </button>
+
+                    <button
+                        class="filter"
+                        data-filter="confirmed"
+                        type="button"
+                    >
+                        Confirmadas
+                    </button>
+
+                    <button
+                        class="filter"
+                        data-filter="completed"
+                        type="button"
+                    >
+                        Completadas
+                    </button>
+
+                    <button
+                        class="filter"
+                        data-filter="cancelled"
+                        type="button"
+                    >
+                        Canceladas
+                    </button>
+
+                    <button
+                        class="filter"
+                        data-filter="no-show"
+                        type="button"
+                    >
+                        No asistió
+                    </button>
+
+                </div>
+
+                <!-- TABLA DE CITAS -->
+
+                <div class="panel">
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th scope="col">
+                                        Fecha
+                                    </th>
+
+                                    <th scope="col">
+                                        Hora
+                                    </th>
+
+                                    <th scope="col">
+                                        Cliente
+                                    </th>
+
+                                    <th scope="col">
+                                        Servicio
+                                    </th>
+
+                                    <th scope="col">
+                                        Profesional
+                                    </th>
+
+                                    <th scope="col">
+                                        Origen
+                                    </th>
+
+                                    <th scope="col">
+                                        Estado
+                                    </th>
+
+                                    <th scope="col">
+                                        Acciones
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody
+                                id="appointmentsTable"
+                            ></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- =========================================================
+     MODAL DE NUEVA CITA / EDITAR CITA
+========================================================= -->
+
+<div
+    class="modal-overlay hidden"
+    id="appointmentModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="appointmentModalTitle"
+>
+
+    <div class="modal">
+
+        <!-- ENCABEZADO -->
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="appointmentModalTitle">
+                    Nueva cita
+                </h2>
+
+                <p>
+                    Registra o modifica una reservación.
+                </p>
+
+            </div>
+
+            <button
+                class="modal-close"
+                id="closeModalButton"
+                type="button"
+                aria-label="Cerrar formulario"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <!-- CUERPO DEL FORMULARIO -->
+
+        <div class="modal-body">
+
+            <!-- CLIENTE -->
+
+            <section class="modal-section">
+
+                <h3>
+                    1. Cliente
+                </h3>
+
+                <div class="form-grid">
+
+                    <div class="field">
+
+                        <label for="appointmentPhone">
+                            Teléfono
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="appointmentPhone"
+                            placeholder="Ej. 667 123 4567"
+                            autocomplete="tel"
+                            inputmode="tel"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="appointmentName">
+                            Nombre
+                        </label>
+
+                        <input
+                            type="text"
+                            id="appointmentName"
+                            placeholder="Nombre del cliente"
+                            autocomplete="name"
+                            maxlength="120"
+                        >
+
+                    </div>
+
+                </div>
+
+                <div
+                    id="customerDetection"
+                    aria-live="polite"
+                ></div>
+
+            </section>
+
+            <!-- SERVICIO Y PROFESIONAL -->
+
+            <section class="modal-section">
+
+                <h3>
+                    2. Servicio y profesional
+                </h3>
+
+                <div class="form-grid">
+
+                    <div class="field">
+
+                        <label for="appointmentService">
+                            Servicio
+                        </label>
+
+                        <select
+                            id="appointmentService"
+                            required
+                        >
+                            <option value="">
+                                Cargando servicios...
+                            </option>
+                        </select>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="appointmentBarber">
+                            Profesional
+                        </label>
+
+                        <select
+                            id="appointmentBarber"
+                            required
+                        >
+                            <option value="">
+                                Cargando personal...
+                            </option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- FECHA Y HORARIO -->
+
+            <section class="modal-section">
+
+                <h3>
+                    3. Fecha y horario
+                </h3>
+
+                <div class="field">
+
+                    <label for="appointmentDate">
+                        Fecha de la cita
+                    </label>
+
+                    <input
+                        type="date"
+                        id="appointmentDate"
+                        required
+                    >
+
+                </div>
+
+                <div class="field top-space">
+
+                    <label>
+                        Horarios disponibles
+                    </label>
+
+                    <div
+                        class="time-grid"
+                        id="appointmentTimes"
+                        aria-label="Seleccionar horario disponible"
+                    ></div>
+
+                </div>
+
+            </section>
+
+            <!-- INFORMACIÓN ADICIONAL -->
+
+            <section class="modal-section">
+
+                <h3>
+                    4. Información adicional
+                </h3>
+
+                <div class="form-grid">
+
+                    <div class="field">
+
+                        <label for="appointmentOrigin">
+                            Origen de la cita
+                        </label>
+
+                        <select id="appointmentOrigin">
+
+                            <option value="whatsapp">
+                                WhatsApp
+                            </option>
+
+                            <option value="instagram">
+                                Instagram
+                            </option>
+
+                            <option value="facebook">
+                                Facebook
+                            </option>
+
+                            <option value="phone">
+                                Teléfono
+                            </option>
+
+                            <option value="walk-in">
+                                En persona
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="appointmentStatus">
+                            Estado inicial
+                        </label>
+
+                        <select id="appointmentStatus">
+
+                            <option value="confirmed">
+                                Confirmada
+                            </option>
+
+                            <option value="pending">
+                                Pendiente
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="field top-space">
+
+                    <label for="appointmentNotes">
+                        Notas internas
+                    </label>
+
+                    <textarea
+                        id="appointmentNotes"
+                        placeholder="Ej. Preferencias del cliente o indicaciones para la cita..."
+                        rows="3"
+                        maxlength="1000"
+                    ></textarea>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <!-- BOTONES DEL FORMULARIO -->
+
+        <div class="modal-footer">
+
+            <button
+                class="btn btn-outline"
+                id="cancelModalButton"
+                type="button"
+            >
+                Cancelar
+            </button>
+
+            <button
+                class="btn btn-dark"
+                id="saveAppointmentButton"
+                type="button"
+            >
+                Guardar cita
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     NOTIFICACIONES
+========================================================= -->
+
+<div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+></div>
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<!-- GESTIÓN DE CITAS -->
+<script
+    type="module"
+    src="js/appointments.js"
+></script>
+
+<!-- CALENDARIO MENSUAL -->
+<script
+    type="module"
+    src="js/appointments-calendar.js"
+></script>
+
+</body>
+</html>

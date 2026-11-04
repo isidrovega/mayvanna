@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mayvanna Beauty Studio | Personal</title>
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/agendapro-dark.css">
+    <link rel="stylesheet" href="css/varden-personal.css">
+<link rel="stylesheet" href="css/mayvanna-theme.css?v=5"></head>
+
+<body>
+
+<div class="app">
+
+    <!-- MENÚ LATERAL -->
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+            Mayvanna
+        </div>
+
+        <span class="sidebar-label">
+            Beauty Studio · Administración
+        </span>
+
+        <nav class="sidebar-nav">
+
+            <a href="index.html" class="sidebar-link">
+                <span>▣</span>
+                Dashboard
+            </a>
+
+            <a href="citas.html" class="sidebar-link">
+                <span>◷</span>
+                Citas
+            </a>
+
+            <a href="clientes.html" class="sidebar-link">
+                <span>♙</span>
+                Clientes
+            </a>
+
+            <a href="barberos.html" class="sidebar-link active">
+                <span>♧</span>
+                Personal
+            </a>
+
+            <a href="servicios.html" class="sidebar-link">
+                <span>≡</span>
+                Servicios
+            </a>
+
+            <a href="fidelidad.html" class="sidebar-link">
+                <span>★</span>
+                Fidelidad
+            </a>
+
+            <a href="reportes.html" class="sidebar-link">
+                <span>↗</span>
+                Reportes
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main">
+
+        <header class="topbar">
+
+            <h2>Personal</h2>
+
+            <div class="admin-user">
+
+                <span>Administrador</span>
+
+                <div class="avatar">
+                    A
+                </div>
+
+            </div>
+
+        </header>
+
+        <div class="content">
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h1>Equipo</h1>
+
+                    <p>
+                        Administra el personal, los servicios,
+                        los horarios y las ganancias por servicio.
+                    </p>
+
+                </div>
+
+                <!-- BOTÓN MODIFICADO -->
+                <button
+                    type="button"
+                    class="btn btn-dark"
+                    id="newBarberButton"
+                >
+                    + Añadir personal
+                </button>
+
+            </div>
+
+            <!-- RESUMEN DEL PERSONAL -->
+            <section
+                class="barber-summary"
+                id="barberSummary"
+            ></section>
+
+            <!-- TARJETAS DEL PERSONAL -->
+            <section
+                class="barbers-grid barber-modern-grid"
+                id="barbersGrid"
+            ></section>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- MODAL DE PERSONAL -->
+<div
+    class="modal-overlay hidden"
+    id="barberModal"
+>
+
+    <div class="modal barber-modern-modal">
+
+        <!-- ENCABEZADO -->
+        <div class="barber-modal-hero">
+
+            <div class="barber-modal-profile">
+
+                <div
+                    class="barber-modal-avatar"
+                    id="barberModalAvatar"
+                >
+                    NP
+                </div>
+
+                <div>
+
+                    <h2 id="barberModalTitle">
+                        Nuevo personal
+                    </h2>
+
+                    <p>
+                        Configuración del miembro del equipo
+                    </p>
+
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                class="modal-close barber-modern-close"
+                id="closeBarberModal"
+                aria-label="Cerrar"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <!-- CUERPO DEL FORMULARIO -->
+        <div class="modal-body barber-modern-body">
+
+            <!-- INFORMACIÓN PERSONAL -->
+            <section class="barber-config-section">
+
+                <div class="barber-config-title">
+
+                    <div>
+
+                        <span class="config-eyebrow">
+                            Información
+                        </span>
+
+                        <h3>
+                            Datos del personal
+                        </h3>
+
+                    </div>
+
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="field">
+
+                        <label for="barberName">
+                            Nombre
+                        </label>
+
+                        <input
+                            type="text"
+                            id="barberName"
+                            placeholder="Ej. María López"
+                            autocomplete="name"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="barberPhone">
+                            Teléfono
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="barberPhone"
+                            placeholder="Ej. 667 123 4567"
+                            autocomplete="tel"
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- ESTADO -->
+                <div class="barber-active-row">
+
+                    <div>
+
+                        <strong>
+                            Personal activo
+                        </strong>
+
+                        <p>
+                            Disponible para aparecer en la agenda.
+                        </p>
+
+                    </div>
+
+                    <label class="modern-switch">
+
+                        <input
+                            type="checkbox"
+                            id="barberActiveSwitch"
+                            checked
+                        >
+
+                        <span class="modern-switch-slider"></span>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+            <!-- SERVICIOS -->
+            <section class="barber-config-section">
+
+                <div class="barber-config-title">
+
+                    <div>
+
+                        <span class="config-eyebrow">
+                            Servicios
+                        </span>
+
+                        <h3>
+                            ¿Qué servicios puede realizar?
+                        </h3>
+
+                    </div>
+
+                </div>
+
+                <div
+                    class="modern-service-grid"
+                    id="barberServices"
+                ></div>
+
+            </section>
+
+            <!-- COMISIONES POR SERVICIO -->
+            <section class="barber-config-section varden-payment-section">
+
+                <div class="barber-config-title">
+
+                    <div>
+
+                        <span class="config-eyebrow">
+                            Remuneración
+                        </span>
+
+                        <h3>
+                            Ganancias por servicio
+                        </h3>
+
+                    </div>
+
+                </div>
+
+                <p class="varden-payment-intro">
+                    Configura cuánto recibe este profesional
+                    por cada servicio realizado. Puedes elegir
+                    un porcentaje o un monto fijo.
+                </p>
+
+                <div
+                    class="varden-commission-list"
+                    id="barberServiceCommissions"
+                ></div>
+
+                <p class="varden-payment-help">
+                    Las comisiones se calculan individualmente
+                    por servicio y se acumulan al completar
+                    las citas.
+                </p>
+
+            </section>
+
+            <!-- HORARIO -->
+            <section class="barber-config-section">
+
+                <div class="barber-config-title">
+
+                    <div>
+
+                        <span class="config-eyebrow">
+                            Horario semanal
+                        </span>
+
+                        <h3>
+                            Disponibilidad
+                        </h3>
+
+                    </div>
+
+                </div>
+
+                <div
+                    class="modern-schedule"
+                    id="scheduleEditor"
+                ></div>
+
+            </section>
+
+        </div>
+
+        <!-- BOTONES DEL MODAL -->
+        <div class="modal-footer barber-modern-footer">
+
+            <button
+                type="button"
+                class="btn btn-outline"
+                id="cancelBarberButton"
+            >
+                Cancelar
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-dark"
+                id="saveBarberButton"
+            >
+                Guardar cambios
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- NOTIFICACIONES -->
+<div
+    class="toast"
+    id="toast"
+></div>
+
+<!-- JAVASCRIPT ORIGINAL -->
+<script
+    type="module"
+    src="js/barbers.js"
+></script>
+
+</body>
+</html>
