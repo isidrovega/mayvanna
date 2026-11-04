@@ -1,0 +1,147 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap");
+
+#mayvannaProfessionalPicker {
+    --mayvanna-wine: #500E1D;
+    --mayvanna-wine-hover: #69172B;
+    --mayvanna-taupe: #AFA394;
+    --mayvanna-stone: #696469;
+    --mayvanna-blush: #DCD2D1;
+    --mayvanna-ivory: #F1EEEA;
+
+    width: 100%;
+    min-width: 0;
+    margin: 12px 0 20px;
+    font-family: "Montserrat", sans-serif;
+}
+
+#mayvannaProfessionalPicker *,
+#mayvannaProfessionalPicker *::before,
+#mayvannaProfessionalPicker *::after {
+    box-sizing: border-box;
+}
+
+.mayvanna-professional-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-bottom: 12px;
+}
+
+.mayvanna-professional-heading strong {
+    color: #500E1D;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.15;
+}
+
+.mayvanna-professional-heading span {
+    color: #696469;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.mayvanna-professional-options {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.mayvanna-professional-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 60px;
+    padding: 11px 13px;
+    border: 1px solid #DCD2D1;
+    border-radius: 12px;
+    background: #FFFFFF;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.mayvanna-professional-option:hover {
+    border-color: #AFA394;
+    background: #F1EEEA;
+}
+
+.mayvanna-professional-option:has(input:checked) {
+    border-color: #500E1D;
+    background: #F1EEEA;
+    box-shadow: 0 0 0 1px #500E1D;
+}
+
+.mayvanna-professional-option:focus-within {
+    outline: 2px solid #69172B;
+    outline-offset: 2px;
+}
+
+.mayvanna-professional-option input {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    margin: 0;
+    accent-color: #500E1D;
+    cursor: pointer;
+}
+
+.mayvanna-professional-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #DCD2D1;
+    color: #500E1D;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.mayvanna-professional-name {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: #500E1D;
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.mayvanna-professional-help {
+    margin: 10px 0 0;
+    color: #696469;
+    font-family: "Montserrat", sans-serif;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.mayvanna-professional-empty {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 16px;
+    border: 1px dashed #AFA394;
+    border-radius: 10px;
+    background: #F1EEEA;
+    color: #696469;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+@media (max-width: 520px) {
+    .mayvanna-professional-options {
+        grid-template-columns: 1fr;
+    }
+
+    .mayvanna-professional-heading strong {
+        font-size: 22px;
+    }
+}

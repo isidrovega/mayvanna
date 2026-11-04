@@ -1,0 +1,455 @@
+
+/* ==========================================================
+   MAYVANNA BEAUTY STUDIO
+   CORRECCIÓN VISUAL V1
+   MÓDULOS: SERVICIOS Y FIDELIDAD
+
+   Paleta:
+   Vino:   #500E1D
+   Beige:  #F1EEEA
+   Taupe:  #AFA394
+   Blanco: #FFFFFF
+
+   Este archivo solo modifica estilos.
+   No altera la lógica de JavaScript.
+   ========================================================== */
+
+/* VARIABLES */
+
+:root {
+    --may-fix-wine: #500e1d;
+    --may-fix-wine-hover: #69172b;
+    --may-fix-wine-soft: #f4e8eb;
+
+    --may-fix-beige: #f1eeea;
+    --may-fix-taupe: #afa394;
+    --may-fix-blush: #dcd2d1;
+
+    --may-fix-white: #ffffff;
+    --may-fix-text: #392d32;
+    --may-fix-muted: #696469;
+    --may-fix-border: #e5ddda;
+    --may-fix-soft: #faf8f6;
+
+    color-scheme: light;
+}
+
+/* ==========================================================
+   1. BOTONES PRINCIPALES
+   ========================================================== */
+
+html body #newServiceButton,
+html body #saveServiceButton,
+html body #registerVisitButton,
+html body #addVisitModalButton {
+    background: var(--may-fix-wine) !important;
+    color: var(--may-fix-white) !important;
+    border-color: var(--may-fix-wine) !important;
+}
+
+html body #newServiceButton:hover,
+html body #saveServiceButton:hover,
+html body #registerVisitButton:hover,
+html body #addVisitModalButton:hover {
+    background: var(--may-fix-wine-hover) !important;
+    color: var(--may-fix-white) !important;
+    border-color: var(--may-fix-wine-hover) !important;
+}
+
+/* ==========================================================
+   2. TARJETAS
+   ========================================================== */
+
+html body #servicesGrid .unified-card,
+html body #loyaltyGrid .unified-card {
+    background: var(--may-fix-white) !important;
+    color: var(--may-fix-text) !important;
+    border-color: var(--may-fix-border) !important;
+}
+
+html body #servicesGrid .unified-card:hover,
+html body #loyaltyGrid .unified-card:hover {
+    border-color: var(--may-fix-taupe) !important;
+    box-shadow:
+        0 12px 30px rgba(80, 14, 29, 0.08) !important;
+}
+
+/* ==========================================================
+   3. AVATARES E ICONOS
+   ========================================================== */
+
+html body #servicesGrid .unified-card-avatar,
+html body #loyaltyGrid .unified-card-avatar {
+    background:
+        linear-gradient(
+            135deg,
+            var(--may-fix-wine),
+            var(--may-fix-wine-hover)
+        ) !important;
+
+    color: var(--may-fix-white) !important;
+    border-color: var(--may-fix-wine) !important;
+}
+
+html body #loyaltyModalAvatar,
+html body #serviceModalAvatar,
+html body #visitModal .unified-modal-avatar {
+    background: var(--may-fix-white) !important;
+    color: var(--may-fix-wine) !important;
+    border-color: var(--may-fix-blush) !important;
+}
+
+/* ==========================================================
+   4. TEXTOS Y MÉTRICAS
+   ========================================================== */
+
+html body #servicesGrid .unified-card-title h3,
+html body #loyaltyGrid .unified-card-title h3,
+html body #servicesGrid .unified-card-metrics strong,
+html body #loyaltyGrid .unified-card-metrics strong,
+html body #servicesGrid .unified-card-detail > span,
+html body #loyaltyGrid .unified-card-detail > span {
+    color: var(--may-fix-wine) !important;
+}
+
+html body #servicesGrid .unified-card-title > span,
+html body #loyaltyGrid .unified-card-title > span,
+html body #servicesGrid .unified-card-metrics span,
+html body #loyaltyGrid .unified-card-metrics span {
+    color: var(--may-fix-muted) !important;
+}
+
+html body #servicesGrid .unified-card-metrics,
+html body #loyaltyGrid .unified-card-metrics {
+    border-color: var(--may-fix-border) !important;
+}
+
+html body #servicesGrid .unified-card-metrics > div,
+html body #loyaltyGrid .unified-card-metrics > div,
+html body #servicesGrid .unified-card-detail,
+html body #loyaltyGrid .unified-card-detail {
+    background: var(--may-fix-soft) !important;
+    color: var(--may-fix-text) !important;
+    border-color: var(--may-fix-border) !important;
+}
+
+/* ==========================================================
+   5. BOTONES DE EDICIÓN
+   ========================================================== */
+
+html body #servicesGrid .modern-edit-button,
+html body #loyaltyGrid .modern-edit-button {
+    background: var(--may-fix-white) !important;
+    color: var(--may-fix-wine) !important;
+    border: 1px solid var(--may-fix-taupe) !important;
+}
+
+html body #servicesGrid .modern-edit-button:hover,
+html body #loyaltyGrid .modern-edit-button:hover {
+    background: var(--may-fix-wine) !important;
+    color: var(--may-fix-white) !important;
+    border-color: var(--may-fix-wine) !important;
+}
+
+/* ==========================================================
+   6. ESTADOS DE SERVICIOS Y FIDELIDAD
+   ========================================================== */
+
+html body #servicesGrid .unified-status.active,
+html body #servicesGrid .unified-status.available,
+html body #loyaltyGrid .unified-status.reward,
+html body #loyaltyModal .unified-status.reward {
+    background: var(--may-fix-wine) !important;
+    color: var(--may-fix-white) !important;
+    border-color: var(--may-fix-wine) !important;
+}
+
+html body #servicesGrid .unified-status.inactive,
+html body #loyaltyGrid .unified-status.progress,
+html body #loyaltyModal .unified-status.progress {
+    background: var(--may-fix-wine-soft) !important;
+    color: var(--may-fix-wine) !important;
+    border-color: var(--may-fix-blush) !important;
+}
+
+html body #servicesGrid .unified-status.active > span,
+html body #loyaltyGrid .unified-status.reward > span {
+    background: var(--may-fix-white) !important;
+}
+
+html body #servicesGrid .unified-status.inactive > span,
+html body #loyaltyGrid .unified-status.progress > span {
+    background: var(--may-fix-taupe) !important;
+}
+
+/* ==========================================================
+   7. RESÚMENES
+   ========================================================== */
+
+html body #serviceSummary,
+html body #loyaltySummary {
+    background: var(--may-fix-white) !important;
+    border-color: var(--may-fix-border) !important;
+}
+
+html body #serviceSummary .module-summary-item strong,
+html body #loyaltySummary .module-summary-item strong {
+    color: var(--may-fix-wine) !important;
+}
+
+html body #serviceSummary .module-summary-item span,
+html body #loyaltySummary .module-summary-item span {
+    color: var(--may-fix-muted) !important;
+}
+
+html body #serviceSummary .module-summary-divider,
+html body #loyaltySummary .module-summary-divider {
+    background: var(--may-fix-border) !important;
+}
+
+/* ==========================================================
+   8. MODALES
+   ========================================================== */
+
+html body #serviceModal .unified-modal,
+html body #loyaltyModal .unified-modal,
+html body #visitModal .unified-modal {
+    background: var(--may-fix-white) !important;
+    color: var(--may-fix-text) !important;
+    border-color: var(--may-fix-border) !important;
+}
+
+html body #serviceModal .unified-modal-header,
+html body #loyaltyModal .unified-modal-header,
+html body #visitModal .unified-modal-header {
+    background: var(--may-fix-wine) !important;
+    color: var(--may-fix-white) !important;
+}
+
+html body #serviceModal .unified-modal-header h2,
+html body #loyaltyModal .unified-modal-header h2,
+html body #visitModal .unified-modal-header h2 {
+    color: var(--may-fix-white) !important;
+}
+
+html body #serviceModal .unified-modal-header p,
+html body #loyaltyModal .unified-modal-header p,
+html body #visitModal .unified-modal-header p {
+    color: #ead9dc !important;
+}
+
+html body #serviceModal .unified-modal-body,
+html body #loyaltyModal .unified-modal-body,
+html body #visitModal .unified-modal-body {
+    background: var(--may-fix-white) !important;
+    color: var(--may-fix-text) !important;
+}
+
+html body #serviceModal .unified-config-section,
+html body #loyaltyModal .unified-config-section,
+html body #visitModal .unified-config-section {
+    border-color: var(--may-fix-border) !important;
+}
+
+html body #serviceModal .unified-config-section h3,
+html body #loyaltyModal .unified-config-section h3,
+html body #visitModal .unified-config-section h3 {
+    color: var(--may-fix-wine) !important;
+}
+
+html body #serviceModal .config-eyebrow,
+html body #loyaltyModal .config-eyebrow,
+html body #visitModal .config-eyebrow {
+    color: var(--may-fix-muted) !important;
+}
+
+html body #serviceModal .unified-active-row,
+html body #loyaltyModal .unified-detail-grid > div {
+    background: var(--may-fix-soft) !important;
+    border-color: var(--may-fix-border) !important;
+}
+
+/* ==========================================================
+   9. FORMULARIOS
+   ========================================================== */
+
+html body #serviceModal input:not([type="checkbox"]),
+html body #serviceModal select,
+html body #serviceModal textarea,
+html body #visitModal input,
+html body #visitModal select,
+html body #visitModal textarea {
+    background: var(--may-fix-white) !important;
+    color: var(--may-fix-text) !important;
+    border-color: var(--may-fix-taupe) !important;
+    color-scheme: light;
+}
+
+html body #serviceModal input:focus,
+html body #serviceModal select:focus,
+html body #visitModal input:focus,
+html body #visitModal select:focus {
+    border-color: var(--may-fix-wine) !important;
+    outline-color: var(--may-fix-wine) !important;
+}
+
+html body #serviceModal .field label,
+html body #visitModal .field label {
+    color: var(--may-fix-wine) !important;
+}
+
+/* ==========================================================
+   10. INTERRUPTOR DE SERVICIOS
+   ========================================================== */
+
+html body #serviceModal .modern-switch-slider {
+    background: var(--may-fix-blush) !important;
+}
+
+html body #serviceModal .modern-switch
+input:checked + .modern-switch-slider {
+    background: var(--may-fix-wine) !important;
+}
+
+/* ==========================================================
+   11. FIDELIDAD - CÍRCULOS DE VISITAS
+   ========================================================== */
+
+html body #loyaltyGrid .simple-loyalty-stamp,
+html body #loyaltyGrid .loyalty-stamp,
+html body #loyaltyModal .loyalty-stamp {
+    background: var(--may-fix-white) !important;
+    border: 2px solid var(--may-fix-wine) !important;
+    border-radius: 50%;
+    color: transparent !important;
+}
+
+html body #loyaltyGrid .simple-loyalty-stamp.active,
+html body #loyaltyGrid .loyalty-stamp.active,
+html body #loyaltyModal .loyalty-stamp.active,
+html body #loyaltyGrid .simple-loyalty-stamp.filled,
+html body #loyaltyModal .loyalty-stamp.filled {
+    background: var(--may-fix-wine) !important;
+    border-color: var(--may-fix-wine) !important;
+}
+
+/* ==========================================================
+   12. FIDELIDAD - BARRAS DE PROGRESO
+   ========================================================== */
+
+html body #loyaltyGrid .loyalty-progress-bar,
+html body #loyaltyModal .loyalty-progress-bar {
+    background: var(--may-fix-blush) !important;
+}
+
+html body #loyaltyGrid .loyalty-progress-fill,
+html body #loyaltyModal #loyaltyModalProgress {
+    background: var(--may-fix-wine) !important;
+}
+
+/* ==========================================================
+   13. FIDELIDAD - BÚSQUEDA
+   ========================================================== */
+
+html body #loyaltySearch {
+    background: var(--may-fix-white) !important;
+    color: var(--may-fix-text) !important;
+    border-color: var(--may-fix-taupe) !important;
+}
+
+html body #loyaltySearch:focus {
+    border-color: var(--may-fix-wine) !important;
+    outline-color: var(--may-fix-wine) !important;
+}
+
+html body #loyaltyGrid .simple-customer-result,
+html body #visitModal .simple-customer-result {
+    background: var(--may-fix-white) !important;
+    color: var(--may-fix-text) !important;
+    border-color: var(--may-fix-border) !important;
+}
+
+html body #loyaltyGrid .simple-customer-result:hover,
+html body #visitModal .simple-customer-result:hover {
+    background: var(--may-fix-wine-soft) !important;
+    border-color: var(--may-fix-wine) !important;
+}
+
+/* ==========================================================
+   14. FIDELIDAD - FILTROS
+   ========================================================== */
+
+html body .module-filters .filter {
+    background: var(--may-fix-white) !important;
+    color: var(--may-fix-muted) !important;
+    border-color: var(--may-fix-border) !important;
+}
+
+html body .module-filters .filter:hover {
+    background: var(--may-fix-wine-soft) !important;
+    color: var(--may-fix-wine) !important;
+    border-color: var(--may-fix-taupe) !important;
+}
+
+html body .module-filters .filter.active {
+    background: var(--may-fix-wine) !important;
+    color: var(--may-fix-white) !important;
+    border-color: var(--may-fix-wine) !important;
+}
+
+/* ==========================================================
+   15. FIDELIDAD - CANJE DE RECOMPENSAS
+   ========================================================== */
+
+html body #redeemRewardButton:not(:disabled) {
+    background: var(--may-fix-wine) !important;
+    color: var(--may-fix-white) !important;
+    border-color: var(--may-fix-wine) !important;
+}
+
+html body #redeemRewardButton:not(:disabled):hover {
+    background: var(--may-fix-wine-hover) !important;
+    border-color: var(--may-fix-wine-hover) !important;
+}
+
+html body #redeemRewardButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ==========================================================
+   16. CONTROLES Y ACCESIBILIDAD
+   ========================================================== */
+
+html body #serviceModal input[type="checkbox"],
+html body #loyaltyModal input[type="checkbox"],
+html body #visitModal input[type="checkbox"] {
+    accent-color: var(--may-fix-wine) !important;
+}
+
+html body #servicesGrid :focus-visible,
+html body #loyaltyGrid :focus-visible,
+html body #serviceModal :focus-visible,
+html body #loyaltyModal :focus-visible,
+html body #visitModal :focus-visible {
+    outline: 2px solid var(--may-fix-wine);
+    outline-offset: 3px;
+}
+
+/* ==========================================================
+   17. PANTALLAS PEQUEÑAS
+   ========================================================== */
+
+@media (max-width: 600px) {
+    html body #serviceModal .unified-modal,
+    html body #loyaltyModal .unified-modal,
+    html body #visitModal .unified-modal {
+        max-width: calc(100vw - 24px);
+    }
+
+    html body #serviceModal .unified-modal-footer,
+    html body #loyaltyModal .unified-modal-footer,
+    html body #visitModal .unified-modal-footer {
+        gap: 10px;
+    }
+}

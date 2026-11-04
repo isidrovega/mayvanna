@@ -1,0 +1,251 @@
+
+/* =========================================================
+   VARDEN — PERSONAL
+   COMISIONES POR SERVICIO
+========================================================= */
+
+#barberModal .barber-modern-modal {
+    overflow: hidden;
+}
+
+#barberModal .barber-modern-body {
+    scrollbar-width: thin;
+    scrollbar-color: #444 transparent;
+}
+
+#barberModal .barber-modern-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+#barberModal .barber-modern-body::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 10px;
+}
+
+/* INTRODUCCIÓN */
+
+#barberModal .varden-payment-intro {
+    margin: 0 0 20px;
+    color: #999;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* LISTA DE COMISIONES */
+
+#barberModal .varden-commission-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* TARJETA POR SERVICIO */
+
+#barberModal .varden-commission-item {
+    padding: 17px;
+    border: 1px solid #343434;
+    border-radius: 10px;
+    background: #1a1a1a;
+    transition: border-color .2s ease;
+}
+
+#barberModal .varden-commission-item:hover {
+    border-color: #4a4a4a;
+}
+
+#barberModal .varden-commission-item.is-unassigned {
+    opacity: .6;
+}
+
+#barberModal .varden-commission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+#barberModal .varden-commission-header strong {
+    display: block;
+    color: #f2f2f2;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#barberModal .varden-commission-header small {
+    display: block;
+    margin-top: 5px;
+    color: #858585;
+    font-size: 11px;
+}
+
+#barberModal .varden-commission-price {
+    color: #bcbcbc;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* CAMPOS */
+
+#barberModal .varden-commission-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 13px;
+}
+
+#barberModal .varden-commission-field {
+    min-width: 0;
+}
+
+#barberModal .varden-commission-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #bcbcbc;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+#barberModal .varden-commission-fields select,
+#barberModal .varden-commission-fields input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+
+    background: #202020;
+    color: #f2f2f2;
+
+    border: 1px solid #383838;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    outline: none;
+
+    transition:
+        border-color .2s ease,
+        background .2s ease;
+}
+
+#barberModal .varden-commission-fields select {
+    cursor: pointer;
+    color-scheme: dark;
+}
+
+#barberModal .varden-commission-fields select option {
+    background: #202020;
+    color: #f2f2f2;
+}
+
+#barberModal .varden-commission-fields input:hover,
+#barberModal .varden-commission-fields select:hover {
+    border-color: #555;
+}
+
+#barberModal .varden-commission-fields input:focus,
+#barberModal .varden-commission-fields select:focus {
+    border-color: #999;
+    background: #242424;
+}
+
+#barberModal .varden-commission-fields input:disabled,
+#barberModal .varden-commission-fields select:disabled {
+    cursor: not-allowed;
+    opacity: .6;
+}
+
+/* GANANCIA CALCULADA */
+
+#barberModal .varden-commission-result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin-top: 15px;
+    padding-top: 14px;
+
+    border-top: 1px solid #303030;
+}
+
+#barberModal .varden-commission-result span {
+    color: #929292;
+    font-size: 12px;
+}
+
+#barberModal .varden-commission-result strong {
+    color: #f2f2f2;
+    font-size: 17px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* AYUDA */
+
+#barberModal .varden-payment-help {
+    margin: 14px 0 0;
+    color: #858585;
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+#barberModal .varden-commission-empty {
+    padding: 20px;
+    border: 1px solid #343434;
+    border-radius: 10px;
+    color: #999;
+    font-size: 13px;
+}
+
+/* COMISIÓN EN TARJETAS DE PERSONAL */
+
+#barbersGrid .barber-payment-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+
+    padding: 14px 0;
+    border-top: 1px solid #303030;
+}
+
+#barbersGrid .barber-payment-card span {
+    color: #929292;
+    font-size: 12px;
+}
+
+#barbersGrid .barber-payment-card strong {
+    color: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 560px) {
+    #barberModal .varden-commission-fields {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    #barberModal .varden-commission-item {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 380px) {
+    #barberModal .varden-commission-header {
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    #barberModal .varden-commission-result {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

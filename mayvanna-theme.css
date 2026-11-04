@@ -1,0 +1,1380 @@
+
+/* ============================================================
+   MAYVANNA BEAUTY STUDIO
+   TEMA VISUAL GLOBAL V4
+
+   Compatible con:
+   - Dashboard
+   - Citas
+   - Clientes
+   - Personal
+   - Servicios
+   - Fidelidad
+   - Reportes
+
+   Solo modifica apariencia.
+   No cambia eventos, datos ni lógica JavaScript.
+============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap");
+
+/* ============================================================
+   1. IDENTIDAD VISUAL
+============================================================ */
+
+:root {
+  color-scheme: light;
+
+  --may-wine: #500e1d;
+  --may-wine-hover: #69172b;
+  --may-wine-light: #f4e8eb;
+
+  --may-taupe: #afa394;
+  --may-stone: #696469;
+  --may-blush: #dcd2d1;
+  --may-ivory: #f1eeea;
+  --may-white: #ffffff;
+
+  --may-text: #392d32;
+  --may-muted: #696469;
+  --may-border: #e5ddda;
+  --may-soft: #faf8f6;
+
+  --may-font-body: "Montserrat", Arial, sans-serif;
+  --may-font-title: "Cormorant Garamond", Georgia, serif;
+
+  /* Variables del sistema existente */
+
+  --ap-black: var(--may-wine);
+  --ap-black-soft: #601426;
+  --ap-black-hover: var(--may-wine-hover);
+
+  --ap-white: var(--may-white);
+  --ap-background: var(--may-ivory);
+  --ap-surface: var(--may-white);
+  --ap-surface-soft: var(--may-soft);
+
+  --ap-text: var(--may-text);
+  --ap-text-muted: var(--may-muted);
+  --ap-muted: var(--may-muted);
+
+  --ap-border: var(--may-border);
+  --ap-border-strong: #cbbfba;
+  --ap-border-hover: var(--may-taupe);
+  --ap-selected: var(--may-wine-light);
+
+  --ap-primary: var(--may-wine);
+  --ap-primary-hover: var(--may-wine-hover);
+
+  --primary: var(--may-wine);
+  --primary-color: var(--may-wine);
+  --accent: var(--may-wine);
+  --accent-color: var(--may-wine);
+  --brand: var(--may-wine);
+  --brand-dark: #390a15;
+}
+
+/* ============================================================
+   2. TIPOGRAFÍA EN TODA LA APLICACIÓN
+============================================================ */
+
+html body,
+html body button,
+html body input,
+html body select,
+html body textarea,
+html body table,
+html body th,
+html body td,
+html body label {
+  font-family: var(--may-font-body) !important;
+}
+
+html body .content *,
+html body .modal *,
+html body .agendapro-payment-dialog * {
+  font-family: var(--may-font-body);
+}
+
+html body h1,
+html body h2,
+html body h3,
+html body h4,
+html body h5,
+html body h6,
+html body .sidebar-brand,
+html body .sidebar-brand strong {
+  font-family: var(--may-font-title) !important;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================================
+   3. FONDO Y ENCABEZADOS
+============================================================ */
+
+html body {
+  background: var(--may-ivory);
+  color: var(--may-text);
+}
+
+html body .main,
+html body .content {
+  background-color: var(--may-ivory);
+  color: var(--may-text);
+}
+
+html body .content h1,
+html body .content h2,
+html body .content h3,
+html body .content h4,
+html body .content h5,
+html body .content h6,
+html body .topbar h2 {
+  color: var(--may-wine);
+}
+
+html body .page-heading p,
+html body .panel-header p,
+html body .module-list-heading p,
+html body .module-toolbar-description {
+  color: var(--may-muted);
+}
+
+/* ============================================================
+   4. SIDEBAR
+============================================================ */
+
+html body .sidebar {
+  background: var(--may-wine);
+  border-color: var(--may-wine);
+  color: var(--may-white);
+}
+
+html body .sidebar-brand,
+html body .sidebar-brand strong {
+  color: var(--may-white);
+}
+
+html body .sidebar-label {
+  color: #e4cfd3;
+}
+
+html body .sidebar-nav .sidebar-link {
+  color: #f0e4e6;
+  background: transparent;
+}
+
+html body .sidebar-nav .sidebar-link:hover {
+  background: var(--may-wine-hover);
+  color: var(--may-white);
+}
+
+html body .sidebar-nav .sidebar-link.active,
+html body .sidebar-nav .sidebar-link[aria-current="page"] {
+  background: var(--may-ivory);
+  color: var(--may-wine);
+  border-color: var(--may-ivory);
+}
+
+html body .sidebar-nav .sidebar-link.active span,
+html body .sidebar-nav .sidebar-link[aria-current="page"] span {
+  color: var(--may-wine);
+}
+
+/* ============================================================
+   5. TOPBAR
+============================================================ */
+
+html body .topbar {
+  background: var(--may-white);
+  border-color: var(--may-border);
+}
+
+html body .topbar h2 {
+  color: var(--may-wine);
+}
+
+html body .avatar {
+  background: var(--may-wine);
+  color: var(--may-white);
+}
+
+/* ============================================================
+   6. TARJETAS GENERALES
+============================================================ */
+
+html body :is(
+  .panel,
+  .card,
+  .stat-card,
+  .metric-card,
+  .dashboard-card,
+  .summary-card,
+  .service-card,
+  .staff-card,
+  .barber-card,
+  .customer-card,
+  .loyalty-card,
+  .report-card,
+  .unified-card,
+  .modern-barber-card,
+  .barber-summary,
+  .module-summary,
+  .module-toolbar
+) {
+  background-color: var(--may-white);
+  border-color: var(--may-border);
+  color: var(--may-text);
+}
+
+html body :is(
+  .stat-card,
+  .metric-card,
+  .dashboard-card,
+  .summary-card,
+  .service-card,
+  .customer-card,
+  .loyalty-card,
+  .report-card
+) :is(.value, .stat-value, .metric-value, strong) {
+  color: var(--may-wine);
+}
+
+html body :is(
+  .stat-card,
+  .metric-card,
+  .dashboard-card,
+  .summary-card,
+  .service-card,
+  .customer-card,
+  .loyalty-card,
+  .report-card
+) :is(.icon, .stat-icon, .metric-icon, .card-icon, .service-icon) {
+  background: var(--may-wine);
+  color: var(--may-white);
+  border-color: var(--may-wine);
+}
+
+/* ============================================================
+   7. RESÚMENES DE MÓDULOS
+============================================================ */
+
+html body .module-summary {
+  background: var(--may-white);
+  border-color: var(--may-border);
+}
+
+html body .module-summary-item strong,
+html body .barber-summary strong {
+  color: var(--may-wine);
+}
+
+html body .module-summary-item span {
+  color: var(--may-muted);
+}
+
+html body .module-summary-divider {
+  background: var(--may-border);
+}
+
+/* ============================================================
+   8. TARJETAS UNIFICADAS
+   SERVICIOS / FIDELIDAD / REPORTES
+============================================================ */
+
+html body .unified-card {
+  background: var(--may-white);
+  border-color: var(--may-border);
+  color: var(--may-text);
+}
+
+html body .unified-card-title h3,
+html body .unified-card-metrics strong,
+html body .unified-card-detail > span {
+  color: var(--may-wine);
+}
+
+html body .unified-card-title > span,
+html body .unified-card-metrics span {
+  color: var(--may-muted);
+}
+
+html body .unified-card-avatar {
+  background: linear-gradient(
+    135deg,
+    var(--may-wine),
+    var(--may-wine-hover)
+  );
+  color: var(--may-white);
+  border-color: var(--may-wine);
+}
+
+html body .unified-card-metrics {
+  border-color: var(--may-border);
+}
+
+html body .unified-card-metrics > div {
+  background: var(--may-soft);
+}
+
+html body .unified-card-metrics > div + div {
+  border-color: var(--may-border);
+}
+
+html body .unified-card-detail {
+  background: var(--may-soft);
+  border-color: var(--may-border);
+  color: var(--may-text);
+}
+
+html body .unified-card-footer {
+  border-color: var(--may-border);
+}
+
+/* ============================================================
+   9. ESTADOS DE SERVICIOS Y FIDELIDAD
+============================================================ */
+
+html body .unified-status.active,
+html body .unified-status.reward,
+html body .unified-status.available {
+  background: var(--may-wine);
+  border-color: var(--may-wine);
+  color: var(--may-white);
+}
+
+html body .unified-status.active > span,
+html body .unified-status.reward > span,
+html body .unified-status.available > span {
+  background: var(--may-white);
+}
+
+html body .unified-status.inactive,
+html body .unified-status.progress {
+  background: var(--may-wine-light);
+  border-color: var(--may-blush);
+  color: var(--may-wine);
+}
+
+html body .unified-status.inactive > span,
+html body .unified-status.progress > span {
+  background: var(--may-taupe);
+}
+
+/* ============================================================
+   10. CLIENTES
+============================================================ */
+
+html body .customer-avatar,
+html body .client-avatar,
+html body .simple-result-avatar {
+  background: var(--may-wine);
+  color: var(--may-white);
+  border-color: var(--may-wine);
+}
+
+html body .customer-card-name h3,
+html body .customer-card h3,
+html body .customer-info-box strong,
+html body .customer-detail-stat strong {
+  color: var(--may-wine);
+}
+
+html body .customer-info-box,
+html body .customer-detail-stat {
+  background: var(--may-soft);
+  border-color: var(--may-border);
+}
+
+html body .customer-detail-section,
+html body .history-row {
+  border-color: var(--may-border);
+}
+
+html body .history-barber,
+html body .client-phone,
+html body .customer-search-icon {
+  color: var(--may-muted);
+}
+
+/* ============================================================
+   11. PERSONAL
+============================================================ */
+
+html body .modern-barber-card {
+  background: var(--may-white);
+  border-color: var(--may-border);
+}
+
+html body .modern-barber-avatar {
+  background: linear-gradient(
+    135deg,
+    var(--may-wine),
+    var(--may-wine-hover)
+  );
+  color: var(--may-white);
+}
+
+html body .modern-barber-name h3,
+html body .modern-barber-metrics strong {
+  color: var(--may-wine);
+}
+
+html body .modern-barber-metrics {
+  border-color: var(--may-border);
+}
+
+html body .modern-barber-metrics > div {
+  background: var(--may-soft);
+}
+
+html body .modern-barber-metrics > div + div {
+  border-color: var(--may-border);
+}
+
+html body .modern-barber-services > span,
+html body .service-tag,
+html body .specialty-tag,
+html body .skill-tag {
+  background: var(--may-wine-light);
+  color: var(--may-wine);
+  border-color: var(--may-blush);
+}
+
+html body .modern-status.active {
+  background: var(--may-wine);
+  color: var(--may-white);
+}
+
+html body .modern-status.active > span {
+  background: var(--may-white);
+}
+
+html body .modern-status.inactive {
+  background: var(--may-wine-light);
+  color: var(--may-muted);
+}
+
+html body .modern-status.inactive > span {
+  background: var(--may-taupe);
+}
+
+/* ============================================================
+   12. TABLAS
+============================================================ */
+
+html body table {
+  background: var(--may-white);
+  color: var(--may-text);
+}
+
+html body thead,
+html body thead tr {
+  background: #f4efed;
+}
+
+html body th {
+  color: var(--may-wine);
+  border-color: var(--may-border);
+}
+
+html body td {
+  color: var(--may-text);
+  border-color: var(--may-border);
+}
+
+html body tbody tr:hover {
+  background: var(--may-soft);
+}
+
+html body .table-wrapper {
+  border-color: var(--may-border);
+}
+
+/* ============================================================
+   13. FILTROS
+============================================================ */
+
+html body .filter,
+html body .module-filters .filter {
+  background: var(--may-white);
+  color: var(--may-muted);
+  border-color: var(--may-border);
+}
+
+html body .filter:hover,
+html body .module-filters .filter:hover {
+  background: var(--may-wine-light);
+  color: var(--may-wine);
+  border-color: var(--may-taupe);
+}
+
+html body .filter.active,
+html body .module-filters .filter.active {
+  background: var(--may-wine);
+  color: var(--may-white);
+  border-color: var(--may-wine);
+}
+
+/* ============================================================
+   14. BOTONES
+============================================================ */
+
+html body .btn-dark,
+html body .btn-primary,
+html body .module-primary-button,
+html body .module-add-button,
+html body .module-action-button,
+html body .report-calendar-apply {
+  background: var(--may-wine);
+  border-color: var(--may-wine);
+  color: var(--may-white);
+}
+
+html body .btn-dark:hover,
+html body .btn-primary:hover,
+html body .module-primary-button:hover,
+html body .module-add-button:hover,
+html body .module-action-button:hover,
+html body .report-calendar-apply:hover {
+  background: var(--may-wine-hover);
+  border-color: var(--may-wine-hover);
+  color: var(--may-white);
+}
+
+html body .btn-outline,
+html body .mini-button,
+html body .modern-edit-button {
+  background: var(--may-white);
+  color: var(--may-wine);
+  border-color: var(--may-taupe);
+}
+
+html body .btn-outline:hover,
+html body .mini-button:hover {
+  background: var(--may-wine-light);
+  color: var(--may-wine);
+  border-color: var(--may-wine);
+}
+
+/* Mantener acciones peligrosas distinguibles */
+
+html body .mini-button.danger {
+  color: #991b1b;
+  border-color: #e5caca;
+}
+
+html body .mini-button.danger:hover {
+  background: #991b1b;
+  color: var(--may-white);
+  border-color: #991b1b;
+}
+
+/* ============================================================
+   15. BUSCADORES Y CAMPOS
+============================================================ */
+
+html body input,
+html body select,
+html body textarea {
+  background-color: var(--may-white);
+  color: var(--may-text);
+  border-color: #cbbfba;
+  accent-color: var(--may-wine);
+}
+
+html body .module-search input,
+html body .customer-search input,
+html body .staff-search input,
+html body .loyalty-search input {
+  background: var(--may-soft);
+  color: var(--may-text);
+  border-color: #cbbfba;
+}
+
+html body input:focus,
+html body select:focus,
+html body textarea:focus {
+  border-color: var(--may-wine);
+  outline-color: var(--may-wine);
+}
+
+html body input::placeholder,
+html body textarea::placeholder {
+  color: var(--may-muted);
+}
+
+/* ============================================================
+   16. CALENDARIO DE CITAS
+============================================================ */
+
+html body .agenda-calendar {
+  background: var(--may-white);
+  border-color: var(--may-border);
+}
+
+html body .agenda-calendar-header h3,
+html body .agenda-calendar-details h3 {
+  color: var(--may-wine);
+}
+
+html body .agenda-calendar-weekdays {
+  background: #f4efed;
+  border-color: var(--may-border);
+}
+
+html body .agenda-calendar-weekdays span {
+  color: var(--may-wine);
+}
+
+html body .agenda-calendar-grid {
+  border-color: var(--may-border);
+}
+
+html body .agenda-calendar-day {
+  background: var(--may-white);
+  color: var(--may-text);
+  border-color: var(--may-border);
+}
+
+html body .agenda-calendar-day:hover {
+  background: var(--may-soft);
+}
+
+html body .agenda-calendar-day.is-today {
+  background: var(--may-wine-light);
+}
+
+html body .agenda-calendar-day.is-selected {
+  background: var(--may-wine-light);
+  box-shadow: inset 0 0 0 2px var(--may-wine);
+}
+
+html body .agenda-calendar-day-number {
+  color: var(--may-wine);
+}
+
+html body .agenda-calendar-day.is-today
+.agenda-calendar-day-number {
+  background: var(--may-wine);
+  color: var(--may-white);
+}
+
+html body .agenda-calendar-event {
+  background: var(--may-wine-light);
+  color: var(--may-wine);
+}
+
+html body .agenda-calendar-event.confirmed {
+  background: var(--may-wine);
+  color: var(--may-white);
+}
+
+html body .agenda-calendar-event.pending {
+  background: #f1e5e7;
+  color: var(--may-wine);
+  border-color: var(--may-blush);
+}
+
+html body .agenda-calendar-event.completed {
+  background: var(--may-taupe);
+  color: #241a1e;
+}
+
+html body .agenda-calendar-event.cancelled,
+html body .agenda-calendar-event.no-show {
+  background: #ece7e5;
+  color: var(--may-muted);
+}
+
+html body .agenda-calendar-appointment {
+  border-color: var(--may-border);
+}
+
+/* ============================================================
+   17. ESTADOS DE CITAS
+============================================================ */
+
+html body .status.confirmed {
+  background: var(--may-wine);
+  color: var(--may-white);
+  border-color: var(--may-wine);
+}
+
+html body .status.pending {
+  background: var(--may-wine-light);
+  color: var(--may-wine);
+  border-color: var(--may-blush);
+}
+
+html body .status.completed {
+  background: var(--may-taupe);
+  color: #241a1e;
+  border-color: var(--may-taupe);
+}
+
+html body .status.cancelled,
+html body .status.no-show {
+  background: #ece7e5;
+  color: var(--may-muted);
+  border-color: var(--may-border);
+}
+
+/* ============================================================
+   18. FIDELIDAD
+============================================================ */
+
+html body .loyalty-stamp,
+html body .loyalty-stamp-small,
+html body .simple-loyalty-stamp,
+html body .stamp,
+html body .visit-stamp {
+  background: var(--may-white);
+  border-color: var(--may-wine);
+}
+
+html body .loyalty-stamp.active,
+html body .loyalty-stamp-small.active,
+html body .simple-loyalty-stamp.active,
+html body .stamp.active,
+html body .visit-stamp.active,
+html body .loyalty-stamp.filled,
+html body .stamp.filled,
+html body .visit-stamp.filled {
+  background: var(--may-wine);
+  border-color: var(--may-wine);
+}
+
+html body .loyalty-progress-bar,
+html body .report-simple-progress {
+  background: var(--may-blush);
+}
+
+html body .loyalty-progress-fill,
+html body .progress-fill,
+html body .progress-bar-fill,
+html body .report-simple-progress > div {
+  background: var(--may-wine);
+}
+
+html body .loyalty-wallet-visual {
+  background: linear-gradient(
+    135deg,
+    var(--may-wine),
+    var(--may-wine-hover)
+  );
+  color: var(--may-white);
+}
+
+/* ============================================================
+   19. MODALES
+============================================================ */
+
+html body .modal {
+  background: var(--may-white);
+  color: var(--may-text);
+  border-color: var(--may-border);
+}
+
+html body .modal-header,
+html body .modal-footer,
+html body .unified-modal-footer,
+html body .barber-modern-footer {
+  border-color: var(--may-border);
+}
+
+html body .modal-header h2,
+html body .modal-section h3,
+html body .unified-config-section h3,
+html body .barber-config-title h3 {
+  color: var(--may-wine);
+}
+
+html body .unified-modal-header,
+html body .barber-modal-hero {
+  background: var(--may-wine);
+  color: var(--may-white);
+}
+
+html body .unified-modal-profile h2,
+html body .barber-modal-profile h2 {
+  color: var(--may-white);
+}
+
+html body .unified-modal-profile p,
+html body .barber-modal-profile p {
+  color: #ead9dc;
+}
+
+html body .unified-modal-avatar,
+html body .barber-modal-avatar {
+  background: var(--may-white);
+  color: var(--may-wine);
+  border-color: var(--may-blush);
+}
+
+html body .unified-config-section,
+html body .barber-config-section {
+  border-color: var(--may-border);
+}
+
+html body .unified-active-row,
+html body .barber-active-row {
+  background: var(--may-soft);
+}
+
+html body .config-eyebrow {
+  color: var(--may-muted);
+}
+
+/* ============================================================
+   20. INTERRUPTORES Y HORARIOS
+============================================================ */
+
+html body .modern-switch-slider {
+  background: var(--may-blush);
+}
+
+html body .modern-switch input:checked
++ .modern-switch-slider {
+  background: var(--may-wine);
+}
+
+html body .modern-service-option {
+  background: var(--may-white);
+  border-color: var(--may-border);
+}
+
+html body .modern-service-option:hover {
+  background: var(--may-soft);
+  border-color: var(--may-taupe);
+}
+
+html body .modern-service-option input:checked
+~ .modern-service-check {
+  background: var(--may-wine);
+  border-color: var(--may-wine);
+  color: var(--may-white);
+}
+
+html body .modern-schedule-row {
+  background: var(--may-white);
+  border-color: var(--may-border);
+}
+
+html body .time-button {
+  background: var(--may-white);
+  color: var(--may-wine);
+  border-color: var(--may-taupe);
+}
+
+html body .time-button:hover {
+  background: var(--may-wine-light);
+  border-color: var(--may-wine);
+}
+
+html body .time-button.selected,
+html body .time-button.active {
+  background: var(--may-wine);
+  color: var(--may-white);
+  border-color: var(--may-wine);
+}
+
+/* ============================================================
+   21. REPORTES
+============================================================ */
+
+html body .report-primary-value {
+  background: var(--may-soft);
+  border-color: var(--may-border);
+}
+
+html body .report-primary-value strong {
+  color: var(--may-wine);
+}
+
+html body .report-mini-avatar,
+html body .report-origin-simple-icon {
+  background: var(--may-wine);
+  color: var(--may-white);
+}
+
+html body .report-calendar-panel {
+  background: var(--may-soft);
+  border-color: var(--may-border);
+}
+
+html body .report-calendar-field label {
+  color: var(--may-muted);
+}
+
+html body .report-calendar-field input {
+  background: var(--may-white);
+  color: var(--may-text);
+  border-color: #cbbfba;
+}
+
+html body .staff-payroll-stat,
+html body .staff-payroll-card {
+  background: var(--may-white);
+  color: var(--may-text);
+  border-color: var(--may-border);
+}
+
+html body .staff-payroll-stat span,
+html body .staff-payroll-person span,
+html body .staff-payroll-amount span,
+html body .staff-payroll-detail-row span,
+html body .staff-payroll-note {
+  color: var(--may-muted);
+}
+
+html body .staff-payroll-stat strong,
+html body .staff-payroll-person strong,
+html body .staff-payroll-amount strong,
+html body .staff-payroll-detail-row strong {
+  color: var(--may-wine);
+}
+
+html body .staff-payroll-avatar {
+  background: var(--may-wine);
+  border-color: var(--may-wine);
+  color: var(--may-white);
+}
+
+html body .staff-payroll-amount,
+html body .staff-payroll-detail-row {
+  border-color: var(--may-border);
+}
+
+html body .staff-payroll-details summary {
+  color: var(--may-wine);
+}
+
+html body .staff-payroll-empty {
+  background: var(--may-soft);
+  color: var(--may-muted);
+  border-color: var(--may-border);
+}
+
+/* ============================================================
+   22. MODAL DE COBRO
+============================================================ */
+
+html body .agendapro-payment-dialog {
+  background: var(--may-white);
+  color: var(--may-text);
+  border-color: var(--may-border);
+}
+
+html body .agendapro-payment-header h2 {
+  color: var(--may-wine);
+}
+
+html body .agendapro-payment-details,
+html body .agendapro-payment-total {
+  background: var(--may-soft);
+  border-color: var(--may-border);
+}
+
+html body .agendapro-payment-details strong,
+html body .agendapro-payment-total strong {
+  color: var(--may-wine);
+}
+
+html body .agendapro-payment-label {
+  color: var(--may-text);
+}
+
+html body .agendapro-payment-amount-field {
+  border-color: var(--may-taupe);
+}
+
+html body .agendapro-payment-amount-field:focus-within {
+  border-color: var(--may-wine);
+}
+
+html body .agendapro-payment-amount-field input {
+  color: var(--may-wine);
+}
+
+html body .agendapro-payment-confirm {
+  background: var(--may-wine);
+  color: var(--may-white);
+  border-color: var(--may-wine);
+}
+
+html body .agendapro-payment-confirm:hover {
+  background: var(--may-wine-hover);
+  border-color: var(--may-wine-hover);
+}
+
+/* ============================================================
+   23. NOTIFICACIONES Y ACCESIBILIDAD
+============================================================ */
+
+html body .toast {
+  background: var(--may-wine);
+  color: var(--may-white);
+  border-color: var(--may-wine);
+}
+
+html body .module-empty-icon {
+  background: var(--may-wine-light);
+  color: var(--may-wine);
+  border-color: var(--may-border);
+}
+
+html body .module-empty-state strong {
+  color: var(--may-wine);
+}
+
+html body .module-empty-state p {
+  color: var(--may-muted);
+}
+
+html body :focus-visible {
+  outline-color: var(--may-wine);
+}
+
+html body .sidebar :focus-visible {
+  outline-color: var(--may-white);
+}
+
+html body ::selection {
+  background: var(--may-blush);
+  color: var(--may-wine);
+}
+
+/* ==========================================================
+   MAYVANNA BEAUTY STUDIO
+   PERSONAL - EDICIÓN DE COMISIONES
+   ========================================================== */
+
+:root {
+    --mayvanna-wine: #500E1D;
+    --mayvanna-wine-light: #70283A;
+    --mayvanna-beige: #F1EEEA;
+    --mayvanna-taupe: #AFA394;
+    --mayvanna-white: #FFFFFF;
+    --mayvanna-text: #500E1D;
+    --mayvanna-muted: #696469;
+    --mayvanna-border: #DCD2D1;
+}
+
+/* Modal de edición de personal */
+
+body:has(#staffModal:not(.hidden)) #staffModal,
+body:has(#barberModal:not(.hidden)) #barberModal {
+    background: rgba(80, 14, 29, 0.48) !important;
+}
+
+/* Contenedores de formularios y comisiones */
+
+#staffModal .modal,
+#barberModal .modal,
+#staffModal .modal-body,
+#barberModal .modal-body,
+#staffModal .modal-header,
+#barberModal .modal-header,
+#staffModal .modal-footer,
+#barberModal .modal-footer {
+    background-color: var(--mayvanna-beige) !important;
+    color: var(--mayvanna-text) !important;
+    border-color: var(--mayvanna-border) !important;
+}
+
+/* Títulos y etiquetas */
+
+#staffModal h2,
+#staffModal h3,
+#staffModal h4,
+#staffModal label,
+#barberModal h2,
+#barberModal h3,
+#barberModal h4,
+#barberModal label {
+    color: var(--mayvanna-wine) !important;
+}
+
+/* Campos de edición */
+
+#staffModal input,
+#staffModal select,
+#staffModal textarea,
+#barberModal input,
+#barberModal select,
+#barberModal textarea {
+    background: var(--mayvanna-white) !important;
+    color: var(--mayvanna-wine) !important;
+    border: 1px solid var(--mayvanna-taupe) !important;
+    border-radius: 8px;
+    color-scheme: light;
+}
+
+#staffModal input:focus,
+#staffModal select:focus,
+#staffModal textarea:focus,
+#barberModal input:focus,
+#barberModal select:focus,
+#barberModal textarea:focus {
+    outline: 2px solid var(--mayvanna-wine-light);
+    outline-offset: 1px;
+    border-color: var(--mayvanna-wine) !important;
+}
+
+/* Tarjetas de comisiones */
+
+#staffModal [class*="commission"],
+#barberModal [class*="commission"],
+.staff-commission,
+.barber-commission,
+.commission-card,
+.commission-row,
+.commission-section,
+.commission-settings {
+    background-color: var(--mayvanna-beige) !important;
+    color: var(--mayvanna-wine) !important;
+    border-color: var(--mayvanna-border) !important;
+}
+
+/* Texto secundario */
+
+#staffModal p,
+#staffModal small,
+#barberModal p,
+#barberModal small {
+    color: var(--mayvanna-muted);
+}
+
+/* Botones principales */
+
+#staffModal .btn-dark,
+#barberModal .btn-dark,
+#staffModal button[type="submit"],
+#barberModal button[type="submit"] {
+    background: var(--mayvanna-wine) !important;
+    color: var(--mayvanna-white) !important;
+    border-color: var(--mayvanna-wine) !important;
+}
+
+#staffModal .btn-dark:hover,
+#barberModal .btn-dark:hover,
+#staffModal button[type="submit"]:hover,
+#barberModal button[type="submit"]:hover {
+    background: var(--mayvanna-wine-light) !important;
+}
+
+/* Botones secundarios */
+
+#staffModal .btn-outline,
+#barberModal .btn-outline {
+    background: transparent !important;
+    color: var(--mayvanna-wine) !important;
+    border-color: var(--mayvanna-taupe) !important;
+}
+
+/* Opciones desplegables */
+
+#staffModal option,
+#barberModal option {
+    background: var(--mayvanna-white);
+    color: var(--mayvanna-wine);
+}
+
+/* ==========================================================
+   MAYVANNA BEAUTY STUDIO
+   CORRECCIÓN DE COLORIMETRÍA — SERVICIOS Y FIDELIDAD
+   ========================================================== */
+
+/* Tarjetas y detalles */
+html body #servicesGrid .unified-card,
+html body #loyaltyGrid .unified-card {
+    background: #ffffff !important;
+    color: #392d32 !important;
+    border-color: #e5ddda !important;
+}
+
+html body #servicesGrid .unified-card-detail,
+html body #loyaltyGrid .unified-card-detail,
+html body #servicesGrid .unified-card-metrics > div,
+html body #loyaltyGrid .unified-card-metrics > div {
+    background: #faf8f6 !important;
+    color: #392d32 !important;
+    border-color: #e5ddda !important;
+}
+
+/* Avatares de las tarjetas */
+html body #servicesGrid .unified-card-avatar,
+html body #loyaltyGrid .unified-card-avatar {
+    background: linear-gradient(
+        135deg,
+        #500e1d,
+        #69172b
+    ) !important;
+    color: #ffffff !important;
+    border-color: #500e1d !important;
+}
+
+/* Nombres, números y métricas */
+html body #servicesGrid .unified-card-title h3,
+html body #loyaltyGrid .unified-card-title h3,
+html body #servicesGrid .unified-card-metrics strong,
+html body #loyaltyGrid .unified-card-metrics strong,
+html body #servicesGrid .unified-card-detail > span,
+html body #loyaltyGrid .unified-card-detail > span {
+    color: #500e1d !important;
+}
+
+/* Botones de edición */
+html body #servicesGrid .modern-edit-button,
+html body #loyaltyGrid .modern-edit-button {
+    background: #ffffff !important;
+    color: #500e1d !important;
+    border-color: #afa394 !important;
+}
+
+html body #servicesGrid .modern-edit-button:hover,
+html body #loyaltyGrid .modern-edit-button:hover {
+    background: #500e1d !important;
+    color: #ffffff !important;
+    border-color: #500e1d !important;
+}
+
+/* Estados */
+html body #servicesGrid .unified-status.active,
+html body #loyaltyGrid .unified-status.reward {
+    background: #500e1d !important;
+    color: #ffffff !important;
+    border-color: #500e1d !important;
+}
+
+html body #servicesGrid .unified-status.inactive,
+html body #loyaltyGrid .unified-status.progress {
+    background: #f4e8eb !important;
+    color: #500e1d !important;
+    border-color: #dcd2d1 !important;
+}
+
+/* Resúmenes superiores */
+html body #serviceSummary .module-summary-item strong,
+html body #loyaltySummary .module-summary-item strong {
+    color: #500e1d !important;
+}
+
+/* Círculos de fidelidad */
+html body #loyaltyGrid .simple-loyalty-stamp,
+html body #loyaltyModal .loyalty-stamp {
+    background: #ffffff !important;
+    border-color: #500e1d !important;
+}
+
+html body #loyaltyGrid .simple-loyalty-stamp.active,
+html body #loyaltyModal .loyalty-stamp.active {
+    background: #500e1d !important;
+    border-color: #500e1d !important;
+}
+
+/* Barra de progreso */
+html body #loyaltyModal .loyalty-progress-bar {
+    background: #dcd2d1 !important;
+}
+
+html body #loyaltyModal #loyaltyModalProgress {
+    background: #500e1d !important;
+}
+
+/* Resultados al buscar clientes */
+html body #visitModal .simple-customer-result {
+    background: #ffffff !important;
+    color: #392d32 !important;
+    border-color: #e5ddda !important;
+}
+
+html body #visitModal .simple-customer-result:hover {
+    background: #f4e8eb !important;
+    border-color: #500e1d !important;
+}
+
+/* Botones principales */
+html body #newServiceButton,
+html body #saveServiceButton,
+html body #registerVisitButton,
+html body #addVisitModalButton {
+    background: #500e1d !important;
+    color: #ffffff !important;
+    border-color: #500e1d !important;
+}
+
+html body #newServiceButton:hover,
+html body #saveServiceButton:hover,
+html body #registerVisitButton:hover,
+html body #addVisitModalButton:hover {
+    background: #69172b !important;
+    border-color: #69172b !important;
+}
+
+/* Canjear recompensa */
+html body #redeemRewardButton:not(:disabled) {
+    background: #500e1d !important;
+    color: #ffffff !important;
+    border-color: #500e1d !important;
+}
+
+/* Modales de Servicios y Fidelidad */
+html body #serviceModal .unified-modal,
+html body #loyaltyModal .unified-modal,
+html body #visitModal .unified-modal {
+    background: #ffffff !important;
+    color: #392d32 !important;
+}
+
+html body #serviceModal .unified-modal-header,
+html body #loyaltyModal .unified-modal-header,
+html body #visitModal .unified-modal-header {
+    background: #500e1d !important;
+    color: #ffffff !important;
+}
+
+html body #serviceModal .unified-modal-body,
+html body #loyaltyModal .unified-modal-body,
+html body #visitModal .unified-modal-body {
+    background: #ffffff !important;
+    color: #392d32 !important;
+}
+
+html body #serviceModal .unified-active-row,
+html body #loyaltyModal .unified-detail-grid > div,
+html body #visitModal .unified-config-section {
+    background: #faf8f6 !important;
+    border-color: #e5ddda !important;
+}
+
+/* Campos de los formularios */
+html body #serviceModal input:not([type="checkbox"]),
+html body #visitModal input {
+    background: #ffffff !important;
+    color: #392d32 !important;
+    border-color: #afa394 !important;
+    color-scheme: light;
+}
+
+/* Interruptor de Servicio activo */
+html body #serviceModal .modern-switch input:checked
++ .modern-switch-slider {
+    background: #500e1d !important;
+}
+
+/* Filtros de Fidelidad */
+html body .module-filters .filter.active {
+    background: #500e1d !important;
+    color: #ffffff !important;
+    border-color: #500e1d !important;
+}
+
+/* Controles de selección */
+html body input[type="checkbox"],
+html body input[type="radio"],
+html body input[type="range"] {
+    accent-color: #500e1d !important;
+}

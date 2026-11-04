@@ -1,0 +1,326 @@
+
+/* ==================================================
+   MAYVANNA BEAUTY STUDIO
+   DISEÑO ELEGANTE DE COMISIONES
+   ================================================== */
+
+.mayvanna-commission-box {
+    --mc-wine: #500e1d;
+    --mc-wine-light: #70283a;
+    --mc-beige: #f1eeea;
+    --mc-white: #ffffff;
+    --mc-border: #dcd2d1;
+    --mc-muted: #766b70;
+
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    grid-column: 1 / -1 !important;
+
+    box-sizing: border-box !important;
+    margin: 20px 0 !important;
+    padding: 24px !important;
+
+    background: var(--mc-beige) !important;
+    color: var(--mc-wine) !important;
+
+    border: 1px solid var(--mc-border) !important;
+    border-radius: 18px !important;
+
+    box-shadow: 0 8px 24px rgba(80, 14, 29, .05);
+
+    font-family: Montserrat, Arial, sans-serif;
+}
+
+.mayvanna-commission-box *,
+.mayvanna-commission-box *::before,
+.mayvanna-commission-box *::after {
+    box-sizing: border-box;
+}
+
+/* TÍTULO */
+
+.mayvanna-commission-box > h3 {
+    margin: 0 0 6px !important;
+    padding: 0 !important;
+    font-size: 21px !important;
+    line-height: 1.3 !important;
+    font-weight: 700 !important;
+    color: var(--mc-wine) !important;
+}
+
+.mayvanna-commission-box > p {
+    margin: 0 0 18px !important;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    color: var(--mc-muted) !important;
+}
+
+/* SELECTOR Y TOTAL */
+
+.mayvanna-commission-box .mayvanna-commission-grid {
+    display: grid !important;
+    grid-template-columns: repeat(
+        2,
+        minmax(0, 1fr)
+    ) !important;
+    gap: 14px !important;
+    align-items: end !important;
+    margin: 18px 0 14px !important;
+}
+
+.mayvanna-commission-grid > div {
+    min-width: 0 !important;
+}
+
+.mayvanna-commission-box label {
+    display: block !important;
+    margin-bottom: 8px !important;
+    color: var(--mc-wine) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+}
+
+.mayvanna-commission-box select,
+.mayvanna-commission-box input[type="number"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 46px !important;
+    padding: 10px 13px !important;
+
+    background: var(--mc-white) !important;
+    color: var(--mc-wine) !important;
+
+    border: 1px solid var(--mc-border) !important;
+    border-radius: 10px !important;
+
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: normal !important;
+    color-scheme: light;
+}
+
+.mayvanna-commission-box select:focus,
+.mayvanna-commission-box input[type="number"]:focus {
+    outline: 2px solid rgba(80, 14, 29, .2) !important;
+    outline-offset: 2px;
+    border-color: var(--mc-wine) !important;
+}
+
+.mayvanna-commission-box
+.mayvanna-commission-total-display {
+    display: flex !important;
+    align-items: center !important;
+    min-height: 46px !important;
+    padding: 10px 14px !important;
+
+    background: var(--mc-white) !important;
+    color: var(--mc-wine) !important;
+
+    border: 1px solid var(--mc-border) !important;
+    border-radius: 10px !important;
+
+    font-size: 17px !important;
+    font-weight: 700 !important;
+}
+
+/* TEXTO EXPLICATIVO */
+
+.mayvanna-commission-box
+.mayvanna-commission-mode-help {
+    margin: 0 0 16px !important;
+    padding: 12px 14px !important;
+
+    background: #ffffff !important;
+    border-left: 3px solid var(--mc-wine) !important;
+    border-radius: 8px !important;
+
+    color: var(--mc-muted) !important;
+    font-size: 12px !important;
+    line-height: 1.6 !important;
+}
+
+/* FILAS DE PROFESIONALES */
+
+.mayvanna-commission-box [data-rows] {
+    display: grid !important;
+    gap: 10px !important;
+    width: 100% !important;
+}
+
+.mayvanna-commission-box
+.mayvanna-commission-person {
+    display: grid !important;
+    grid-template-columns:
+        minmax(0, 1fr)
+        140px !important;
+
+    gap: 16px !important;
+    align-items: center !important;
+
+    width: 100% !important;
+    min-width: 0 !important;
+
+    margin: 0 !important;
+    padding: 15px !important;
+
+    background: var(--mc-white) !important;
+    border: 1px solid var(--mc-border) !important;
+    border-radius: 12px !important;
+}
+
+.mayvanna-commission-person > div {
+    min-width: 0 !important;
+}
+
+.mayvanna-commission-person strong {
+    display: block !important;
+    margin: 0 0 5px !important;
+
+    color: var(--mc-wine) !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+
+    overflow-wrap: anywhere;
+}
+
+.mayvanna-commission-person small {
+    display: block !important;
+
+    color: var(--mc-muted) !important;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+}
+
+/* CAMPO PORCENTAJE / MONTO */
+
+.mayvanna-commission-box
+.mayvanna-commission-input-wrap {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+.mayvanna-commission-input-wrap input {
+    width: 100% !important;
+    padding-right: 38px !important;
+    text-align: right !important;
+}
+
+.mayvanna-commission-box
+.mayvanna-commission-input-unit {
+    position: absolute !important;
+    right: 13px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+
+    color: var(--mc-wine) !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    pointer-events: none !important;
+}
+
+/* RESUMEN FINANCIERO */
+
+.mayvanna-commission-box
+.mayvanna-commission-totals {
+    display: grid !important;
+    gap: 12px !important;
+
+    margin: 18px 0 0 !important;
+    padding: 18px !important;
+
+    background: var(--mc-white) !important;
+    border: 1px solid var(--mc-border) !important;
+    border-radius: 14px !important;
+}
+
+.mayvanna-commission-box
+.mayvanna-commission-totals > div {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+
+    min-width: 0 !important;
+}
+
+.mayvanna-commission-totals span {
+    color: var(--mc-muted) !important;
+    font-size: 13px !important;
+}
+
+.mayvanna-commission-totals strong {
+    color: var(--mc-wine) !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    font-variant-numeric: tabular-nums;
+}
+
+.mayvanna-commission-box
+.mayvanna-commission-business {
+    margin-top: 4px !important;
+    padding: 15px !important;
+
+    background: var(--mc-beige) !important;
+    border: 1px solid var(--mc-border) !important;
+    border-radius: 10px !important;
+}
+
+.mayvanna-commission-business span {
+    color: var(--mc-wine) !important;
+    font-weight: 700 !important;
+}
+
+.mayvanna-commission-business strong {
+    font-size: 20px !important;
+}
+
+/* VALIDACIÓN */
+
+.mayvanna-commission-box
+.mayvanna-commission-message {
+    margin: 14px 0 0 !important;
+    padding: 10px 12px !important;
+    background: #ffffff !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+}
+
+/* MÓVILES */
+
+@media (max-width: 600px) {
+    .mayvanna-commission-box {
+        padding: 16px !important;
+        margin: 14px 0 !important;
+        border-radius: 14px !important;
+    }
+
+    .mayvanna-commission-box
+    .mayvanna-commission-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .mayvanna-commission-box
+    .mayvanna-commission-person {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 12px !important;
+        padding: 13px !important;
+    }
+
+    .mayvanna-commission-box
+    .mayvanna-commission-totals {
+        padding: 14px !important;
+    }
+
+    .mayvanna-commission-business strong {
+        font-size: 18px !important;
+    }
+}

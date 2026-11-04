@@ -1,0 +1,2381 @@
+
+/* =========================================================
+   AGENDAPRO — TEMA NEGRO
+   Archivo: css/agendapro-dark.css
+
+   Mantiene el diseño y modifica la paleta de colores.
+========================================================= */
+
+:root {
+    color-scheme: light;
+
+    --ap-black: #111111;
+    --ap-black-soft: #1c1c1c;
+    --ap-black-hover: #292929;
+
+    --ap-white: #ffffff;
+    --ap-background: #f5f5f5;
+    --ap-surface: #ffffff;
+    --ap-surface-soft: #fafafa;
+
+    --ap-text: #171717;
+    --ap-text-muted: #737373;
+
+    --ap-border: #e5e5e5;
+    --ap-border-strong: #d4d4d4;
+
+    --ap-selected: #eeeeee;
+    --ap-danger: #991b1b;
+}
+
+/* =========================================================
+   FONDO Y TEXTO
+========================================================= */
+
+body {
+    background-color: var(--ap-background);
+    color: var(--ap-text);
+}
+
+.main,
+.content {
+    color: var(--ap-text);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--ap-text);
+}
+
+.page-heading p,
+.panel p,
+.client-phone {
+    color: var(--ap-text-muted);
+}
+
+/* =========================================================
+   MENÚ LATERAL
+========================================================= */
+
+.sidebar {
+    background: var(--ap-black);
+    color: var(--ap-white);
+    border-color: var(--ap-black);
+}
+
+.sidebar-brand {
+    color: var(--ap-white);
+}
+
+.sidebar-brand strong,
+.sidebar-brand h1,
+.sidebar-brand h2,
+.sidebar-brand span {
+    color: var(--ap-white);
+}
+
+.sidebar-label {
+    color: #a3a3a3;
+}
+
+.sidebar-nav .sidebar-link {
+    color: #d4d4d4;
+    background: transparent;
+    border-color: transparent;
+}
+
+.sidebar-nav .sidebar-link:hover {
+    background: var(--ap-black-hover);
+    color: var(--ap-white);
+}
+
+.sidebar-nav .sidebar-link.active,
+.sidebar-nav .sidebar-link[aria-current="page"] {
+    background: var(--ap-white);
+    color: var(--ap-black);
+    border-color: var(--ap-white);
+    font-weight: 700;
+}
+
+.sidebar-nav .sidebar-link.active span,
+.sidebar-nav .sidebar-link[aria-current="page"] span {
+    color: var(--ap-black);
+}
+
+/* =========================================================
+   BARRA SUPERIOR
+========================================================= */
+
+.topbar {
+    background: var(--ap-white);
+    border-color: var(--ap-border);
+}
+
+.topbar h2 {
+    color: var(--ap-black);
+}
+
+.admin-user {
+    color: var(--ap-text);
+}
+
+.avatar {
+    background: var(--ap-black);
+    color: var(--ap-white);
+}
+
+/* =========================================================
+   TARJETAS Y PANELES
+========================================================= */
+
+.panel,
+.card,
+.stat-card,
+.metric-card,
+.dashboard-card {
+    background: var(--ap-surface);
+    border-color: var(--ap-border);
+    color: var(--ap-text);
+}
+
+.panel h2,
+.panel h3,
+.card h2,
+.card h3,
+.stat-card h2,
+.stat-card h3 {
+    color: var(--ap-black);
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.btn-dark,
+.btn-primary,
+button.btn-dark,
+button.btn-primary {
+    background: var(--ap-black);
+    border-color: var(--ap-black);
+    color: var(--ap-white);
+}
+
+.btn-dark:hover,
+.btn-primary:hover,
+button.btn-dark:hover,
+button.btn-primary:hover {
+    background: var(--ap-black-hover);
+    border-color: var(--ap-black-hover);
+    color: var(--ap-white);
+}
+
+.btn-outline,
+button.btn-outline {
+    background: var(--ap-white);
+    border-color: var(--ap-border-strong);
+    color: var(--ap-black);
+}
+
+.btn-outline:hover,
+button.btn-outline:hover {
+    background: var(--ap-selected);
+    border-color: var(--ap-black);
+    color: var(--ap-black);
+}
+
+button:disabled,
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+.filter {
+    background: var(--ap-white);
+    color: var(--ap-text-muted);
+    border-color: var(--ap-border);
+}
+
+.filter:hover {
+    background: var(--ap-selected);
+    color: var(--ap-black);
+}
+
+.filter.active {
+    background: var(--ap-black);
+    color: var(--ap-white);
+    border-color: var(--ap-black);
+}
+
+/* =========================================================
+   TABLAS
+========================================================= */
+
+table {
+    background: var(--ap-white);
+    color: var(--ap-text);
+}
+
+thead,
+thead tr {
+    background: var(--ap-surface-soft);
+}
+
+th {
+    color: #525252;
+    border-color: var(--ap-border);
+}
+
+td {
+    color: var(--ap-text);
+    border-color: var(--ap-border);
+}
+
+tbody tr:hover {
+    background: var(--ap-surface-soft);
+}
+
+.table-wrapper {
+    border-color: var(--ap-border);
+}
+
+/* =========================================================
+   BOTONES DE ACCIONES
+========================================================= */
+
+.mini-button {
+    background: var(--ap-white);
+    color: var(--ap-black);
+    border-color: var(--ap-border-strong);
+}
+
+.mini-button:hover {
+    background: var(--ap-black);
+    color: var(--ap-white);
+    border-color: var(--ap-black);
+}
+
+.mini-button.danger {
+    color: var(--ap-danger);
+    border-color: #e5caca;
+}
+
+.mini-button.danger:hover {
+    background: var(--ap-danger);
+    border-color: var(--ap-danger);
+    color: var(--ap-white);
+}
+
+/* =========================================================
+   ESTADOS DE CITAS
+========================================================= */
+
+.status {
+    background: #eeeeee;
+    color: #404040;
+}
+
+.status.pending {
+    background: #f5f5f5;
+    color: #525252;
+    border-color: #d4d4d4;
+}
+
+.status.confirmed {
+    background: #262626;
+    color: #ffffff;
+    border-color: #262626;
+}
+
+.status.completed {
+    background: #d4d4d4;
+    color: #171717;
+    border-color: #d4d4d4;
+}
+
+.status.cancelled,
+.status.no-show {
+    background: #f5f5f5;
+    color: #737373;
+    border-color: #e5e5e5;
+}
+
+/* =========================================================
+   FORMULARIOS
+========================================================= */
+
+.field label,
+label {
+    color: var(--ap-text);
+}
+
+input,
+select,
+textarea {
+    background-color: var(--ap-white);
+    color: var(--ap-text);
+    border-color: var(--ap-border-strong);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--ap-black);
+    outline-color: var(--ap-black);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #a3a3a3;
+}
+
+/* =========================================================
+   VENTANAS EMERGENTES
+========================================================= */
+
+.modal-overlay {
+    background: rgba(0, 0, 0, 0.65);
+}
+
+.modal {
+    background: var(--ap-white);
+    color: var(--ap-text);
+    border-color: var(--ap-border);
+}
+
+.modal-header,
+.modal-footer {
+    border-color: var(--ap-border);
+}
+
+.modal-header h2,
+.modal-section h3 {
+    color: var(--ap-black);
+}
+
+.modal-close {
+    color: var(--ap-text-muted);
+}
+
+.modal-close:hover {
+    color: var(--ap-black);
+}
+
+/* =========================================================
+   HORARIOS DISPONIBLES
+========================================================= */
+
+.time-button {
+    background: var(--ap-white);
+    color: var(--ap-black);
+    border-color: var(--ap-border-strong);
+}
+
+.time-button:hover {
+    background: var(--ap-selected);
+    border-color: var(--ap-black);
+}
+
+.time-button.selected,
+.time-button.active {
+    background: var(--ap-black);
+    border-color: var(--ap-black);
+    color: var(--ap-white);
+}
+
+/* =========================================================
+   CLIENTES
+========================================================= */
+
+.customer-found,
+.customer-new {
+    background: var(--ap-surface-soft);
+    color: var(--ap-text);
+    border-color: var(--ap-border);
+}
+
+/* =========================================================
+   CALENDARIO MENSUAL
+========================================================= */
+
+.agenda-calendar {
+    background: var(--ap-white);
+    border-color: var(--ap-border);
+}
+
+.agenda-calendar-header h3,
+.agenda-calendar-details h3 {
+    color: var(--ap-black);
+}
+
+.agenda-calendar-weekdays {
+    background: #f5f5f5;
+    border-color: var(--ap-border);
+}
+
+.agenda-calendar-weekdays span {
+    color: #525252;
+}
+
+.agenda-calendar-grid {
+    border-color: var(--ap-border);
+}
+
+.agenda-calendar-day {
+    background: var(--ap-white);
+    color: var(--ap-text);
+    border-color: var(--ap-border);
+}
+
+.agenda-calendar-day:hover {
+    background: var(--ap-surface-soft);
+}
+
+.agenda-calendar-day.is-today {
+    background: #f5f5f5;
+}
+
+.agenda-calendar-day.is-selected {
+    background: #eeeeee;
+    box-shadow: inset 0 0 0 2px var(--ap-black);
+}
+
+.agenda-calendar-day-number {
+    color: var(--ap-black);
+}
+
+.agenda-calendar-day.is-today .agenda-calendar-day-number {
+    background: var(--ap-black);
+    color: var(--ap-white);
+}
+
+.agenda-calendar-event {
+    background: #e5e5e5;
+    color: var(--ap-black);
+}
+
+.agenda-calendar-event.pending {
+    background: #f5f5f5;
+    color: #525252;
+    border-color: #d4d4d4;
+}
+
+.agenda-calendar-event.confirmed {
+    background: var(--ap-black);
+    color: var(--ap-white);
+}
+
+.agenda-calendar-event.completed {
+    background: #d4d4d4;
+    color: var(--ap-black);
+}
+
+.agenda-calendar-event.cancelled,
+.agenda-calendar-event.no-show {
+    background: #f5f5f5;
+    color: #737373;
+}
+
+.agenda-calendar-appointment {
+    border-color: var(--ap-border);
+}
+
+/* =========================================================
+   NOTIFICACIONES
+========================================================= */
+
+.toast {
+    background: var(--ap-black);
+    color: var(--ap-white);
+    border-color: var(--ap-black);
+}
+
+/* =========================================================
+   ACCESIBILIDAD
+========================================================= */
+
+:focus-visible {
+    outline: 2px solid var(--ap-black);
+    outline-offset: 3px;
+}
+
+.sidebar :focus-visible {
+    outline-color: var(--ap-white);
+}
+
+.sidebar-link.active:focus-visible {
+    outline-color: #a3a3a3;
+}
+
+
+/* =========================================================
+   AGENDAPRO — COLORES DE TARJETAS
+   Eliminar verde y usar negro, blanco y gris
+========================================================= */
+
+:root {
+    --primary: #111111;
+    --primary-color: #111111;
+    --accent: #111111;
+    --accent-color: #111111;
+    --success: #262626;
+    --success-color: #262626;
+    --green: #111111;
+}
+
+/* Tarjetas generales y estadísticas */
+
+.stat-card,
+.metric-card,
+.dashboard-card,
+.summary-card,
+.service-card,
+.staff-card,
+.barber-card,
+.customer-card,
+.loyalty-card,
+.report-card {
+    border-color: #e5e5e5;
+    color: #171717;
+}
+
+/* Fondos verdes que se usan como acento en tarjetas */
+
+.stat-card .icon,
+.stat-card .stat-icon,
+.metric-card .icon,
+.metric-card .metric-icon,
+.dashboard-card .card-icon,
+.summary-card .card-icon,
+.service-card .service-icon,
+.staff-card .staff-icon,
+.barber-card .barber-icon,
+.customer-card .customer-icon,
+.loyalty-card .loyalty-icon,
+.report-card .report-icon {
+    background: #111111;
+    color: #ffffff;
+    border-color: #111111;
+}
+
+/* Indicadores y números destacados */
+
+.stat-card .value,
+.stat-card .stat-value,
+.metric-card .value,
+.metric-card .metric-value,
+.summary-card .value,
+.dashboard-card .value,
+.loyalty-card .value {
+    color: #111111;
+}
+
+/* Etiquetas positivas */
+
+.badge.success,
+.badge.active,
+.tag.success,
+.tag.active,
+.status.active,
+.status.paid,
+.status.success {
+    background: #262626;
+    color: #ffffff;
+    border-color: #262626;
+}
+
+/* Barras de progreso */
+
+.progress-bar,
+.progress-fill,
+.progress-bar-fill,
+.loyalty-progress-fill {
+    accent-color: #111111;
+}
+
+.progress-bar-fill,
+.progress-fill,
+.loyalty-progress-fill {
+    background: #111111;
+}
+
+/* Controles de selección */
+
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"],
+progress {
+    accent-color: #111111;
+}
+
+/* Colores para gráficos SVG que usen clases de acento */
+
+.chart-accent,
+.chart-primary,
+.chart-success {
+    color: #111111;
+    stroke: #111111;
+}
+
+/* =========================================================
+   FIDELIDAD — CÍRCULOS
+========================================================= */
+
+.loyalty-stamps,
+.stamps,
+.visit-stamps,
+.loyalty-visits {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.loyalty-stamp,
+.stamp,
+.visit-stamp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    padding: 0;
+    border: 2px solid #111111;
+    border-radius: 50%;
+
+    background: #ffffff;
+    color: transparent;
+
+    font-size: 0;
+    line-height: 1;
+
+    box-sizing: border-box;
+}
+
+/* Visita registrada: círculo negro */
+
+.loyalty-stamp.filled,
+.loyalty-stamp.completed,
+.loyalty-stamp.active,
+.stamp.filled,
+.stamp.completed,
+.stamp.active,
+.visit-stamp.filled,
+.visit-stamp.completed,
+.visit-stamp.active {
+    background: #111111;
+    border-color: #111111;
+    color: transparent;
+}
+
+/* Visita pendiente: círculo blanco */
+
+.loyalty-stamp.empty,
+.loyalty-stamp.pending,
+.stamp.empty,
+.stamp.pending,
+.visit-stamp.empty,
+.visit-stamp.pending {
+    background: #ffffff;
+    border-color: #111111;
+    color: transparent;
+}
+
+/* Evitar que aparezcan tijeras como pseudoelementos */
+
+.loyalty-stamp::before,
+.loyalty-stamp::after,
+.stamp::before,
+.stamp::after,
+.visit-stamp::before,
+.visit-stamp::after {
+    content: none;
+}
+
+
+/* =========================================================
+   AGENDAPRO — FIDELIDAD EN NEGRO
+   Tarjetas y círculos de visitas
+========================================================= */
+
+/* Tarjetas */
+
+.unified-card {
+    background: #ffffff;
+    color: #171717;
+    border-color: #e5e5e5;
+}
+
+.unified-card-avatar,
+.simple-result-avatar,
+#loyaltyModalAvatar {
+    background: #171717;
+    color: #ffffff;
+    border-color: #171717;
+}
+
+/* Estados */
+
+.unified-status.reward {
+    background: #171717;
+    color: #ffffff;
+    border-color: #171717;
+}
+
+.unified-status.progress {
+    background: #f5f5f5;
+    color: #525252;
+    border-color: #d4d4d4;
+}
+
+.unified-status.reward > span {
+    background: #ffffff;
+}
+
+.unified-status.progress > span {
+    background: #737373;
+}
+
+/* Datos de las tarjetas */
+
+.unified-card-metrics strong,
+.unified-card-title h3,
+.unified-card-detail > span {
+    color: #171717;
+}
+
+.unified-card-detail {
+    background: #fafafa;
+    border-color: #e5e5e5;
+}
+
+.modern-edit-button {
+    color: #171717;
+    border-color: #d4d4d4;
+}
+
+.modern-edit-button:hover {
+    background: #171717;
+    color: #ffffff;
+    border-color: #171717;
+}
+
+/* Contenedores de círculos */
+
+.simple-loyalty-stamps,
+#loyaltyModalStamps {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Círculos vacíos */
+
+.simple-loyalty-stamp,
+.loyalty-stamp {
+    display: inline-block;
+    flex: 0 0 auto;
+
+    width: 26px;
+    height: 26px;
+
+    padding: 0;
+    margin: 0;
+
+    background: #ffffff;
+    border: 2px solid #171717;
+    border-radius: 50%;
+
+    color: transparent;
+    font-size: 0;
+    line-height: 0;
+
+    box-sizing: border-box;
+    box-shadow: none;
+}
+
+/* Círculos llenos */
+
+.simple-loyalty-stamp.active,
+.loyalty-stamp.active {
+    background: #171717;
+    border-color: #171717;
+    color: transparent;
+}
+
+/* Tamaño de círculos en el modal */
+
+#loyaltyModalStamps .loyalty-stamp {
+    width: 34px;
+    height: 34px;
+}
+
+/* Eliminar iconos decorativos anteriores */
+
+.simple-loyalty-stamp::before,
+.simple-loyalty-stamp::after,
+.loyalty-stamp::before,
+.loyalty-stamp::after {
+    content: none;
+}
+
+/* Barra de progreso */
+
+#loyaltyModalProgress {
+    background: #171717;
+}
+
+/* Resultados de búsqueda */
+
+.simple-customer-result {
+    background: #ffffff;
+    color: #171717;
+    border-color: #e5e5e5;
+}
+
+.simple-customer-result:hover {
+    background: #f5f5f5;
+    border-color: #171717;
+}
+
+/* Botones principales */
+
+#registerVisitButton,
+#addVisitModalButton,
+#redeemRewardButton:not(:disabled) {
+    background: #171717;
+    color: #ffffff;
+    border-color: #171717;
+}
+
+#registerVisitButton:hover,
+#addVisitModalButton:hover,
+#redeemRewardButton:not(:disabled):hover {
+    background: #303030;
+    border-color: #303030;
+}
+
+/* Resumen superior */
+
+#loyaltySummary .module-summary-item strong {
+    color: #171717;
+}
+
+/* =========================================================
+   AGENDAPRO — CLIENTES Y PERSONAL
+   Tema monocromático: negro, blanco y gris
+   Mantiene las dimensiones y la estructura existente
+========================================================= */
+
+/* Tarjetas principales */
+
+.unified-card,
+.customer-card,
+.client-card,
+.staff-card,
+.barber-card,
+.employee-card,
+.professional-card {
+    background-color: #ffffff;
+    border-color: #e5e5e5;
+    color: #171717;
+}
+
+/* Encabezados y nombres */
+
+.unified-card-title h3,
+.customer-card h3,
+.client-card h3,
+.staff-card h3,
+.barber-card h3,
+.employee-card h3,
+.professional-card h3 {
+    color: #171717;
+}
+
+/* Avatares e iconos */
+
+.unified-card-avatar,
+.customer-avatar,
+.client-avatar,
+.staff-avatar,
+.barber-avatar,
+.employee-avatar,
+.professional-avatar,
+.simple-result-avatar {
+    background-color: #171717;
+    color: #ffffff;
+    border-color: #171717;
+}
+
+/* Indicadores de estado */
+
+.unified-status.active,
+.unified-status.available,
+.status.active,
+.status.available,
+.badge.active,
+.badge.available,
+.staff-status.active,
+.barber-status.active {
+    background-color: #171717;
+    color: #ffffff;
+    border-color: #171717;
+}
+
+/* Indicadores secundarios */
+
+.unified-status.inactive,
+.unified-status.progress,
+.status.inactive,
+.badge.inactive,
+.staff-status.inactive,
+.barber-status.inactive {
+    background-color: #f5f5f5;
+    color: #525252;
+    border-color: #d4d4d4;
+}
+
+/* Puntos de estado */
+
+.unified-status.active > span,
+.unified-status.available > span {
+    background-color: #ffffff;
+}
+
+.unified-status.inactive > span,
+.unified-status.progress > span {
+    background-color: #737373;
+}
+
+/* Métricas */
+
+.unified-card-metrics,
+.customer-metrics,
+.staff-metrics,
+.barber-metrics {
+    border-color: #e5e5e5;
+}
+
+.unified-card-metrics strong,
+.customer-metrics strong,
+.staff-metrics strong,
+.barber-metrics strong {
+    color: #171717;
+}
+
+/* Detalles de tarjetas */
+
+.unified-card-detail,
+.customer-card-detail,
+.staff-card-detail,
+.barber-card-detail {
+    background-color: #fafafa;
+    border-color: #e5e5e5;
+    color: #171717;
+}
+
+/* Botones de edición */
+
+.modern-edit-button,
+.customer-edit-button,
+.staff-edit-button,
+.barber-edit-button {
+    background-color: #ffffff;
+    color: #171717;
+    border-color: #d4d4d4;
+}
+
+.modern-edit-button:hover,
+.customer-edit-button:hover,
+.staff-edit-button:hover,
+.barber-edit-button:hover {
+    background-color: #171717;
+    color: #ffffff;
+    border-color: #171717;
+}
+
+/* Botones principales de los módulos */
+
+.module-primary-button,
+.module-add-button,
+.module-action-button {
+    background-color: #171717;
+    color: #ffffff;
+    border-color: #171717;
+}
+
+.module-primary-button:hover,
+.module-add-button:hover,
+.module-action-button:hover {
+    background-color: #303030;
+    color: #ffffff;
+    border-color: #303030;
+}
+
+/* Filtros */
+
+.module-filters .filter {
+    background-color: #ffffff;
+    color: #525252;
+    border-color: #e5e5e5;
+}
+
+.module-filters .filter:hover {
+    background-color: #f5f5f5;
+    color: #171717;
+}
+
+.module-filters .filter.active {
+    background-color: #171717;
+    color: #ffffff;
+    border-color: #171717;
+}
+
+/* Resúmenes superiores */
+
+.module-summary {
+    background-color: #ffffff;
+    border-color: #e5e5e5;
+}
+
+.module-summary-item strong {
+    color: #171717;
+}
+
+.module-summary-item span {
+    color: #737373;
+}
+
+.module-summary-divider {
+    background-color: #e5e5e5;
+}
+
+/* Búsqueda */
+
+.module-search input,
+.customer-search input,
+.staff-search input {
+    background-color: #ffffff;
+    color: #171717;
+    border-color: #d4d4d4;
+}
+
+.module-search input:focus,
+.customer-search input:focus,
+.staff-search input:focus {
+    border-color: #171717;
+    outline-color: #171717;
+}
+
+/* Etiquetas de servicios y especialidades */
+
+.service-tag,
+.specialty-tag,
+.skill-tag,
+.staff-service,
+.barber-service {
+    background-color: #f5f5f5;
+    color: #171717;
+    border-color: #e5e5e5;
+}
+
+/* Ventanas de edición */
+
+.module-modal,
+.customer-modal,
+.staff-modal,
+.barber-modal {
+    background-color: #ffffff;
+    color: #171717;
+    border-color: #e5e5e5;
+}
+
+/* Campos seleccionados */
+
+.module-modal input:focus,
+.module-modal select:focus,
+.module-modal textarea:focus {
+    border-color: #171717;
+    outline-color: #171717;
+}
+
+/* Interruptores y controles */
+
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"] {
+    accent-color: #171717;
+}
+
+/* Barras de progreso */
+
+.customer-progress-fill,
+.staff-progress-fill,
+.module-progress-fill {
+    background-color: #171717;
+}
+
+/* Estados vacíos */
+
+.module-empty-icon {
+    background-color: #f5f5f5;
+    color: #171717;
+    border-color: #e5e5e5;
+}
+
+.module-empty-state strong {
+    color: #171717;
+}
+
+.module-empty-state p {
+    color: #737373;
+}
+
+/* =========================================================
+   AGENDAPRO
+   CORRECCIÓN DE COLORES — CLIENTES Y PERSONAL
+
+   Basado en las clases reales de admin.css.
+
+   Mantiene:
+   - Diseño original
+   - Distribución de tarjetas
+   - Tamaños y espaciados
+   - Responsive
+   - Formularios y modales
+
+   Cambia:
+   - Verde a negro
+   - Verde claro a gris claro
+   - Degradados verdes a negro/gris
+========================================================= */
+
+
+/* =========================================================
+   1. VARIABLES DE COLOR
+========================================================= */
+
+:root {
+    --ap-primary: #171717;
+    --ap-primary-hover: #303030;
+
+    --ap-background: #f5f5f5;
+    --ap-surface: #ffffff;
+    --ap-surface-soft: #fafafa;
+
+    --ap-text: #171717;
+    --ap-muted: #737373;
+
+    --ap-border: #e5e5e5;
+    --ap-border-hover: #bdbdbd;
+
+    --ap-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   2. SIDEBAR
+========================================================= */
+
+.sidebar {
+    background: #111111;
+    color: #ffffff;
+
+    box-shadow:
+        8px 0 30px rgba(0, 0, 0, 0.06);
+}
+
+.sidebar-brand {
+    color: #ffffff;
+}
+
+.sidebar-label {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.sidebar-link {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.sidebar-link:hover {
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-link.active,
+.sidebar-link[aria-current="page"] {
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.16);
+}
+
+
+/* =========================================================
+   3. TARJETAS GENERALES
+========================================================= */
+
+.stat-card,
+.panel,
+.customer-card,
+.modern-barber-card,
+.unified-card,
+.report-card {
+    background: #ffffff;
+
+    border-color: var(--ap-border);
+}
+
+.stat-card:hover,
+.customer-card:hover,
+.modern-barber-card:hover,
+.unified-card:hover {
+    border-color: var(--ap-border-hover);
+
+    box-shadow: var(--ap-shadow);
+}
+
+
+/* =========================================================
+   4. CLIENTES — TARJETAS
+========================================================= */
+
+.customer-avatar {
+    background: #171717;
+    color: #ffffff;
+}
+
+.customer-card-name h3 {
+    color: #171717;
+}
+
+.customer-info-box {
+    background: #f5f5f5;
+}
+
+.customer-info-box strong {
+    color: #171717;
+}
+
+.customer-search-icon {
+    color: #737373;
+}
+
+.customer-search input {
+    background: #fafafa;
+
+    border-color: #d4d4d4;
+}
+
+.customer-search input:focus {
+    background: #ffffff;
+
+    border-color: #171717;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   5. CLIENTES — CÍRCULOS DE FIDELIDAD
+========================================================= */
+
+.loyalty-stamps-small,
+.loyalty-stamps {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.loyalty-stamp-small,
+.loyalty-stamp {
+    padding: 0;
+
+    background: #ffffff;
+
+    border: 2px solid #171717;
+    border-radius: 50%;
+
+    color: transparent;
+
+    font-size: 0;
+    line-height: 0;
+
+    box-shadow: none;
+}
+
+.loyalty-stamp-small.active,
+.loyalty-stamp.active {
+    background: #171717;
+
+    border-color: #171717;
+
+    color: transparent;
+}
+
+.loyalty-stamp-small::before,
+.loyalty-stamp-small::after,
+.loyalty-stamp::before,
+.loyalty-stamp::after {
+    content: none;
+}
+
+.loyalty-progress-bar {
+    background: #e5e5e5;
+}
+
+.loyalty-progress-fill {
+    background: #171717;
+}
+
+
+/* =========================================================
+   6. CLIENTES — MODAL DE DETALLES
+========================================================= */
+
+.customer-detail-stat {
+    background: #f5f5f5;
+}
+
+.customer-detail-stat strong {
+    color: #171717;
+}
+
+.customer-detail-section {
+    border-color: #e5e5e5;
+}
+
+.history-row {
+    border-color: #e5e5e5;
+}
+
+.history-barber {
+    color: #525252;
+}
+
+
+/* =========================================================
+   7. PERSONAL — TARJETAS
+========================================================= */
+
+.modern-barber-card {
+    border-color: #e5e5e5;
+}
+
+.modern-barber-card:hover {
+    border-color: #bdbdbd;
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.07);
+}
+
+/* Elimina el degradado verde */
+
+.modern-barber-avatar {
+    background:
+        linear-gradient(
+            135deg,
+            #111111,
+            #353535
+        );
+
+    color: #ffffff;
+}
+
+.modern-barber-name h3 {
+    color: #171717;
+}
+
+
+/* =========================================================
+   8. PERSONAL — ESTADOS
+========================================================= */
+
+.modern-status.active {
+    background: #171717;
+    color: #ffffff;
+}
+
+.modern-status.active > span {
+    background: #ffffff;
+}
+
+.modern-status.inactive {
+    background: #eeeeee;
+    color: #737373;
+}
+
+.modern-status.inactive > span {
+    background: #a3a3a3;
+}
+
+
+/* =========================================================
+   9. PERSONAL — MÉTRICAS
+========================================================= */
+
+.modern-barber-metrics {
+    border-color: #e5e5e5;
+}
+
+.modern-barber-metrics > div {
+    background: #fafafa;
+}
+
+.modern-barber-metrics > div + div {
+    border-color: #e5e5e5;
+}
+
+.modern-barber-metrics strong {
+    color: #171717;
+}
+
+
+/* =========================================================
+   10. PERSONAL — SERVICIOS ASIGNADOS
+========================================================= */
+
+.modern-barber-services > span {
+    background: #f0f0f0;
+    color: #404040;
+}
+
+
+/* =========================================================
+   11. PERSONAL — BOTÓN EDITAR
+========================================================= */
+
+.modern-edit-button {
+    background: transparent;
+
+    color: #171717;
+
+    border: 0;
+}
+
+.modern-edit-button:hover {
+    background: transparent;
+    color: #525252;
+}
+
+
+/* =========================================================
+   12. PERSONAL — MODAL
+========================================================= */
+
+.barber-modal-hero {
+    background: #111111;
+    color: #ffffff;
+}
+
+.barber-modal-avatar {
+    background: #ffffff;
+    color: #171717;
+}
+
+.barber-modal-profile h2 {
+    color: #ffffff;
+}
+
+.barber-modal-profile p {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.barber-config-section {
+    border-color: #e5e5e5;
+}
+
+.config-eyebrow {
+    color: #737373;
+}
+
+.barber-active-row {
+    background: #f5f5f5;
+}
+
+
+/* =========================================================
+   13. PERSONAL — INTERRUPTOR
+========================================================= */
+
+.modern-switch-slider {
+    background: #d4d4d4;
+}
+
+.modern-switch input:checked
++ .modern-switch-slider {
+    background: #171717;
+}
+
+.modern-switch input:focus-visible
++ .modern-switch-slider {
+    outline: 2px solid #171717;
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   14. PERSONAL — SELECCIÓN DE SERVICIOS
+========================================================= */
+
+.modern-service-option {
+    background: #ffffff;
+
+    border-color: #e5e5e5;
+}
+
+.modern-service-option:hover {
+    background: #fafafa;
+
+    border-color: #a3a3a3;
+}
+
+.modern-service-check {
+    background: #ffffff;
+
+    border-color: #d4d4d4;
+}
+
+.modern-service-option input:checked
+~ .modern-service-check {
+    background: #171717;
+
+    color: #ffffff;
+
+    border-color: #171717;
+}
+
+.modern-service-option input:focus-visible
+~ .modern-service-check {
+    outline: 2px solid #171717;
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   15. PERSONAL — HORARIOS
+========================================================= */
+
+.modern-schedule {
+    border-color: #e5e5e5;
+}
+
+.modern-schedule-row {
+    background: #ffffff;
+
+    border-color: #e5e5e5;
+}
+
+.modern-schedule-row.disabled {
+    background: #fafafa;
+}
+
+.modern-schedule-times input[type="time"] {
+    background: #fafafa;
+
+    color: #171717;
+
+    border-color: #d4d4d4;
+}
+
+.modern-schedule-times input[type="time"]:focus {
+    background: #ffffff;
+
+    border-color: #171717;
+}
+
+.barber-modern-footer {
+    border-color: #e5e5e5;
+}
+
+
+/* =========================================================
+   16. TARJETAS UNIFICADAS
+   Servicios + Fidelidad
+========================================================= */
+
+.unified-card-avatar {
+    background:
+        linear-gradient(
+            135deg,
+            #111111,
+            #353535
+        );
+
+    color: #ffffff;
+}
+
+.unified-status.active,
+.unified-status.reward {
+    background: #171717;
+    color: #ffffff;
+}
+
+.unified-status.active > span,
+.unified-status.reward > span {
+    background: #ffffff;
+}
+
+.unified-status.inactive,
+.unified-status.progress {
+    background: #eeeeee;
+    color: #525252;
+}
+
+.unified-status.inactive > span,
+.unified-status.progress > span {
+    background: #737373;
+}
+
+.unified-card-metrics {
+    border-color: #e5e5e5;
+}
+
+.unified-card-metrics > div {
+    background: #fafafa;
+}
+
+.unified-card-metrics > div + div {
+    border-color: #e5e5e5;
+}
+
+.unified-card-footer {
+    border-color: #e5e5e5;
+}
+
+
+/* =========================================================
+   17. MODALES UNIFICADOS
+========================================================= */
+
+.unified-modal-header {
+    background: #111111;
+    color: #ffffff;
+}
+
+.unified-modal-avatar {
+    background: #ffffff;
+    color: #171717;
+}
+
+.unified-modal-profile h2 {
+    color: #ffffff;
+}
+
+.unified-config-section {
+    border-color: #e5e5e5;
+}
+
+.unified-active-row {
+    background: #f5f5f5;
+}
+
+.unified-modal-footer {
+    border-color: #e5e5e5;
+}
+
+
+/* =========================================================
+   18. FIDELIDAD
+========================================================= */
+
+.simple-loyalty-stamp,
+.loyalty-stamp {
+    background: #ffffff;
+
+    border: 2px solid #171717;
+
+    border-radius: 50%;
+
+    color: transparent;
+
+    font-size: 0;
+    line-height: 0;
+}
+
+.simple-loyalty-stamp.active,
+.loyalty-stamp.active {
+    background: #171717;
+
+    border-color: #171717;
+}
+
+.loyalty-wallet-visual {
+    background:
+        linear-gradient(
+            135deg,
+            #111111,
+            #353535
+        );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.loyalty-modal-progress {
+    background: #fafafa;
+
+    border-color: #e5e5e5;
+}
+
+.loyalty-detail-metrics > div {
+    background: #f5f5f5;
+}
+
+
+/* =========================================================
+   19. FILTROS Y BUSCADORES
+========================================================= */
+
+.filter:hover {
+    background: #f5f5f5;
+
+    color: #171717;
+
+    border-color: #bdbdbd;
+}
+
+.filter.active {
+    background: #171717;
+
+    color: #ffffff;
+
+    border-color: #171717;
+}
+
+.module-search input,
+.loyalty-search input {
+    background: #fafafa;
+
+    color: #171717;
+
+    border-color: #d4d4d4;
+}
+
+.module-search input:focus,
+.loyalty-search input:focus {
+    background: #ffffff;
+
+    border-color: #171717;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   20. REPORTES
+========================================================= */
+
+.report-primary-value {
+    background: #f5f5f5;
+
+    border-color: #e5e5e5;
+}
+
+.report-primary-value strong {
+    color: #171717;
+}
+
+.report-mini-avatar,
+.report-origin-simple-icon {
+    background: #171717;
+    color: #ffffff;
+}
+
+.report-simple-progress {
+    background: #e5e5e5;
+}
+
+.report-simple-progress > div {
+    background: #171717;
+}
+
+
+/* =========================================================
+   21. ELEMENTOS COMPARTIDOS
+========================================================= */
+
+.avatar,
+.module-empty-icon,
+.visit-result-avatar {
+    background: #171717;
+    color: #ffffff;
+}
+
+.text-link,
+.dashboard-appointment-time strong,
+.visit-result-progress {
+    color: #171717;
+}
+
+.customer-found {
+    background: #f5f5f5;
+
+    color: #171717;
+
+    border-color: #d4d4d4;
+}
+
+.customer-new {
+    background: #fafafa;
+
+    color: #525252;
+
+    border-color: #e5e5e5;
+}
+
+.time-button:hover {
+    background: #f5f5f5;
+
+    border-color: #171717;
+}
+
+.time-button.selected {
+    background: #171717;
+
+    color: #ffffff;
+
+    border-color: #171717;
+}
+
+.mini-button.success {
+    background: #f5f5f5;
+
+    color: #171717;
+
+    border-color: #d4d4d4;
+}
+
+.mini-button.success:hover {
+    background: #171717;
+
+    color: #ffffff;
+
+    border-color: #171717;
+}
+
+
+/* =========================================================
+   22. SOMBRAS Y BORDES
+========================================================= */
+
+.unified-card:hover,
+.modern-barber-card:hover,
+.customer-card:hover {
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.07);
+}
+
+.module-summary,
+.barber-summary,
+.module-toolbar {
+    background: #ffffff;
+
+    border-color: #e5e5e5;
+}
+
+
+/* =========================================================
+   23. ACCESIBILIDAD
+========================================================= */
+
+.customer-search input:focus-visible,
+.module-search input:focus-visible,
+.loyalty-search input:focus-visible {
+    outline: 2px solid #171717;
+    outline-offset: 2px;
+}
+
+/* =========================================================
+   AGENDAPRO
+   BOTONES ELIMINAR / EDITAR
+========================================================= */
+
+.modern-card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.modern-delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 30px;
+    padding: 7px 11px;
+
+    border: 1px solid #d4d4d4;
+    border-radius: 7px;
+
+    background: #ffffff;
+    color: #525252;
+
+    font: inherit;
+    font-size: 10px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.modern-delete-button:hover {
+    background: #171717;
+    color: #ffffff;
+    border-color: #171717;
+}
+
+.modern-delete-button:focus-visible {
+    outline: 2px solid #171717;
+    outline-offset: 3px;
+}
+
+.modern-card-actions .modern-edit-button {
+    color: #171717;
+}
+
+.modern-card-actions .modern-edit-button:hover {
+    color: #525252;
+}
+
+@media (max-width: 520px) {
+    .modern-card-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+/* =========================================================
+   AGENDAPRO — MODAL DE COBRO
+   ESTILO NEGRO, BLANCO Y GRIS
+========================================================= */
+
+.agendapro-payment-overlay[hidden] {
+    display: none !important;
+}
+
+.agendapro-payment-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(5px);
+}
+
+.agendapro-payment-dialog {
+    width: min(100%, 480px);
+    max-height: calc(100vh - 40px);
+
+    overflow-y: auto;
+
+    background: #ffffff;
+    color: #171717;
+
+    border: 1px solid #e5e5e5;
+    border-radius: 18px;
+
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.22);
+}
+
+.agendapro-payment-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 25px 26px 20px;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.agendapro-payment-header h2 {
+    margin: 0 0 6px;
+
+    color: #171717;
+
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+}
+
+.agendapro-payment-header p {
+    margin: 0;
+
+    color: #737373;
+    font-size: 12px;
+}
+
+.agendapro-payment-close {
+    display: grid;
+    place-items: center;
+
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #525252;
+
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.agendapro-payment-close:hover {
+    background: #f5f5f5;
+}
+
+.agendapro-payment-body {
+    padding: 24px 26px;
+}
+
+.agendapro-payment-details {
+    display: grid;
+    gap: 13px;
+
+    padding: 17px;
+
+    margin-bottom: 24px;
+
+    background: #f5f5f5;
+
+    border: 1px solid #eeeeee;
+    border-radius: 12px;
+}
+
+.agendapro-payment-details > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.agendapro-payment-details span {
+    color: #737373;
+    font-size: 12px;
+}
+
+.agendapro-payment-details strong {
+    color: #171717;
+
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+}
+
+.agendapro-payment-label {
+    display: block;
+
+    margin: 0 0 9px;
+
+    color: #262626;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.agendapro-payment-amount-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 22px;
+    padding: 0 15px;
+
+    height: 52px;
+
+    background: #ffffff;
+
+    border: 1px solid #d4d4d4;
+    border-radius: 10px;
+}
+
+.agendapro-payment-amount-field:focus-within {
+    border-color: #171717;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.agendapro-payment-amount-field > span {
+    color: #525252;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.agendapro-payment-amount-field input {
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+
+    border: 0;
+    outline: 0;
+
+    background: transparent;
+    color: #171717;
+
+    font: inherit;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.agendapro-payment-select {
+    width: 100%;
+    height: 48px;
+
+    margin-bottom: 22px;
+    padding: 0 14px;
+
+    border: 1px solid #d4d4d4;
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: #171717;
+
+    font: inherit;
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.agendapro-payment-select:focus {
+    outline: 2px solid #171717;
+    outline-offset: 2px;
+}
+
+.agendapro-payment-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    padding: 18px;
+
+    background: #f5f5f5;
+
+    border: 1px solid #eeeeee;
+    border-radius: 12px;
+}
+
+.agendapro-payment-total span {
+    color: #737373;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.agendapro-payment-total strong {
+    color: #171717;
+
+    font-size: 23px;
+    font-weight: 800;
+}
+
+.agendapro-payment-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    padding: 20px 26px 25px;
+
+    border-top: 1px solid #eeeeee;
+}
+
+.agendapro-payment-cancel,
+.agendapro-payment-confirm {
+    min-height: 43px;
+    padding: 0 17px;
+
+    border-radius: 9px;
+
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.agendapro-payment-cancel {
+    background: #ffffff;
+    color: #525252;
+
+    border: 1px solid #d4d4d4;
+}
+
+.agendapro-payment-cancel:hover {
+    background: #f5f5f5;
+}
+
+.agendapro-payment-confirm {
+    background: #171717;
+    color: #ffffff;
+
+    border: 1px solid #171717;
+}
+
+.agendapro-payment-confirm:hover {
+    background: #333333;
+}
+
+.agendapro-payment-confirm:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 520px) {
+    .agendapro-payment-overlay {
+        padding: 12px;
+    }
+
+    .agendapro-payment-dialog {
+        max-height: calc(100vh - 24px);
+        border-radius: 14px;
+    }
+
+    .agendapro-payment-header {
+        padding: 20px;
+    }
+
+    .agendapro-payment-body {
+        padding: 20px;
+    }
+
+    .agendapro-payment-footer {
+        padding: 16px 20px 20px;
+    }
+
+    .agendapro-payment-footer button {
+        flex: 1;
+    }
+
+    .agendapro-payment-total strong {
+        font-size: 20px;
+    }
+}
+
+/* =========================================================
+   AGENDAPRO — FILTRO DE CALENDARIO EN REPORTES
+========================================================= */
+
+.report-calendar-panel[hidden] {
+    display: none !important;
+}
+
+.report-calendar-panel {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    width: 100%;
+    margin-top: 16px;
+    padding: 16px;
+
+    background: #f5f5f5;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+}
+
+.report-calendar-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    flex: 1 1 160px;
+    min-width: 0;
+}
+
+.report-calendar-field label {
+    color: #525252;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.report-calendar-field input {
+    width: 100%;
+    min-height: 43px;
+    padding: 0 12px;
+
+    background: #ffffff;
+    color: #171717;
+
+    border: 1px solid #d4d4d4;
+    border-radius: 9px;
+
+    font: inherit;
+    font-size: 13px;
+}
+
+.report-calendar-field input:focus {
+    outline: 2px solid #171717;
+    outline-offset: 2px;
+}
+
+.report-calendar-apply {
+    min-height: 43px;
+    padding: 0 18px;
+
+    background: #171717;
+    color: #ffffff;
+
+    border: 1px solid #171717;
+    border-radius: 9px;
+
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.report-calendar-apply:hover {
+    background: #333333;
+}
+
+@media (max-width: 600px) {
+    .report-calendar-panel {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .report-calendar-field {
+        flex: 0 1 auto;
+        width: 100%;
+    }
+
+    .report-calendar-apply {
+        width: 100%;
+    }
+}

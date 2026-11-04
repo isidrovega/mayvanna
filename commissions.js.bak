@@ -1,0 +1,728 @@
+
+/* =========================================================
+   MAYVANNA BEAUTY STUDIO
+   Archivo: js/commissions.js
+
+   Reparto de una bolsa de comisión entre
+   varios profesionales.
+
+   No modifica el precio cobrado al cliente.
+========================================================= */
+
+const currency = value =>
+    new Intl.NumberFormat("es-MX", {
+        style: "currency",
+        currency: "MXN"
+    }).format(Number(value) || 0);
+
+const cents = value =>
+    Math.round(Number(value) * 100);
+
+const roundMoney = value =>
+    Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+
+function escapeHTML(value) {
+    const element = document.createElement("div");
+    element.textContent = String(value ?? "");
+    return element.innerHTML;
+}
+
+export function getCommissionStaffIds(appointment) {
+    if (
+        Array.isArray(appointment.barberIds) &&
+        appointment.barberIds.length
+    ) {
+        return [...new Set(
+            appointment.barberIds.map(String)
+        )];
+    }
+
+    const id =
+        appointment.staffId ??
+        appointment.barberId;
+
+    return id == null || id === ""
+        ? []
+        : [String(id)];
+}
+
+export function calculateCommissionDistribution({
+    price,
+    commissionTotal,
+    mode,
+    allocations
+}) {
+    const totalPrice = Number(price);
+    const totalCommission = Number(commissionTotal);
+
+    if (
+        !Number.isFinite(totalPrice) ||
+        !Number.isFinite(totalCommission) ||
+        totalPrice < 0 ||
+        totalCommission < 0 ||
+        cents(totalCommission) > cents(totalPrice)
+    ) {
+        return {
+            valid: false,
+            message:
+                "La comisión debe estar entre $0 y " +
+                "el precio total de la cita.",
+            distributions: [],
+            businessAmount: 0
+        };
+    }
+
+    if (
+        !Array.isArray(allocations) ||
+        !allocations.length
+    ) {
+        return {
+            valid: false,
+            message: "Selecciona profesionales.",
+            distributions: [],
+            businessAmount: 0
+        };
+    }
+
+    if (!["percentage", "fixed"].includes(mode)) {
+        return {
+            valid: false,
+            message: "Selecciona un tipo de reparto.",
+            distributions: [],
+            businessAmount: 0
+        };
+    }
+
+    const normalized = allocations.map(item => ({
+        staffId: String(item.staffId),
+        value: Number(item.value)
+    }));
+
+    if (
+        normalized.some(item =>
+            !item.staffId ||
+            !Number.isFinite(item.value) ||
+            item.value < 0
+        )
+    ) {
+        return {
+            valid: false,
+            message:
+                "Todos los importes deben ser válidos.",
+            distributions: [],
+            businessAmount: 0
+        };
+    }
+
+    if (
+        new Set(normalized.map(item => item.staffId))
+            .size !== normalized.length
+    ) {
+        return {
+            valid: false,
+            message: "Hay profesionales repetidos.",
+            distributions: [],
+            businessAmount: 0
+        };
+    }
+
+    const targetCents = cents(totalCommission);
+
+    if (mode === "percentage") {
+        const totalPercent = normalized.reduce(
+            (sum, item) => sum + item.value,
+            0
+        );
+
+        if (Math.abs(totalPercent - 100) > 0.000001) {
+            return {
+                valid: false,
+                message:
+                    "Los porcentajes deben sumar 100%.",
+                distributions: [],
+                businessAmount: 0
+            };
+        }
+    } else {
+        const assigned = normalized.reduce(
+            (sum, item) => sum + cents(item.value),
+            0
+        );
+
+        if (assigned !== targetCents) {
+            return {
+                valid: false,
+                message:
+                    "Los montos deben sumar exactamente " +
+                    currency(totalCommission) + ".",
+                distributions: [],
+                businessAmount: 0
+            };
+        }
+    }
+
+    let distributedCents = 0;
+
+    const distributions = normalized.map(
+        (item, index) => {
+            const isLast =
+                index === normalized.length - 1;
+
+            const amountCents =
+                mode === "percentage"
+                    ? isLast
+                        ? targetCents - distributedCents
+                        : Math.round(
+                            targetCents * item.value / 100
+                        )
+                    : cents(item.value);
+
+            distributedCents += amountCents;
+
+            return {
+                staffId: item.staffId,
+                type: mode,
+                value: item.value,
+                amount: amountCents / 100
+            };
+        }
+    );
+
+    if (
+        distributions.some(item => item.amount < 0) ||
+        distributedCents !== targetCents
+    ) {
+        return {
+            valid: false,
+            message:
+                "No fue posible distribuir la comisión.",
+            distributions: [],
+            businessAmount: 0
+        };
+    }
+
+    return {
+        valid: true,
+        message: "Comisión distribuida correctamente.",
+        distributions,
+        businessAmount: roundMoney(
+            totalPrice - totalCommission
+        )
+    };
+}
+
+export function createCommissionPicker({
+    anchor,
+    getPrice,
+    onChange
+}) {
+    if (!(anchor instanceof Element)) {
+        throw new Error(
+            "No se encontró dónde mostrar las comisiones."
+        );
+    }
+
+    if (typeof getPrice !== "function") {
+        throw new Error(
+            "Se requiere una función getPrice."
+        );
+    }
+
+    let professionals = [];
+    let commissionTotal = 0;
+    let mode = "percentage";
+    let allocations = [];
+    let manuallyEdited = false;
+
+    const wrapper = document.createElement("section");
+
+    wrapper.className = "mayvanna-commission-picker";
+
+    wrapper.innerHTML = `
+        <style>
+            .mayvanna-commission-picker {
+                margin-top: 18px;
+                padding: 18px;
+                border: 1px solid #DCD2D1;
+                border-radius: 12px;
+                background: #F1EEEA;
+                color: #500E1D;
+                font-family: Montserrat, sans-serif;
+            }
+
+            .mayvanna-commission-picker * {
+                box-sizing: border-box;
+            }
+
+            .mayvanna-commission-picker h3 {
+                margin: 0 0 6px;
+                font-family: "Cormorant Garamond", serif;
+                font-size: 26px;
+                font-weight: 600;
+            }
+
+            .mayvanna-commission-picker p {
+                margin: 0 0 14px;
+                font-size: 12px;
+                line-height: 1.6;
+                color: #696469;
+            }
+
+            .mayvanna-commission-picker label {
+                display: block;
+                margin-bottom: 6px;
+                font-size: 12px;
+                font-weight: 600;
+            }
+
+            .mayvanna-commission-picker input,
+            .mayvanna-commission-picker select {
+                width: 100%;
+                min-height: 42px;
+                padding: 9px 11px;
+                border: 1px solid #AFA394;
+                border-radius: 8px;
+                background: #fff;
+                color: #500E1D;
+                font: inherit;
+                font-size: 13px;
+            }
+
+            .mayvanna-commission-fields {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                margin-bottom: 15px;
+            }
+
+            .mayvanna-commission-row {
+                display: grid;
+                grid-template-columns: 1fr 110px;
+                align-items: center;
+                gap: 12px;
+                padding: 11px 0;
+                border-bottom: 1px solid #DCD2D1;
+            }
+
+            .mayvanna-commission-row strong {
+                display: block;
+                font-size: 13px;
+            }
+
+            .mayvanna-commission-row small {
+                display: block;
+                margin-top: 4px;
+                color: #696469;
+                font-size: 11px;
+            }
+
+            .mayvanna-commission-summary {
+                margin-top: 15px;
+                display: grid;
+                gap: 8px;
+                font-size: 13px;
+            }
+
+            .mayvanna-commission-summary div {
+                display: flex;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .mayvanna-commission-summary strong {
+                color: #500E1D;
+            }
+
+            .mayvanna-commission-error {
+                margin-top: 12px !important;
+                color: #9F2437 !important;
+                font-weight: 600;
+            }
+
+            .mayvanna-commission-error.valid {
+                color: #38704D !important;
+            }
+
+            @media (max-width: 480px) {
+                .mayvanna-commission-fields {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+
+        <h3>Distribución de comisiones</h3>
+
+        <p>
+            Define cuánto corresponde al personal.
+            El resto del precio queda para el negocio.
+        </p>
+
+        <div class="mayvanna-commission-fields">
+            <div>
+                <label>Comisión total (MXN)</label>
+
+                <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    data-commission-total
+                >
+            </div>
+
+            <div>
+                <label>Tipo de reparto</label>
+
+                <select data-commission-mode>
+                    <option value="percentage">
+                        Porcentaje (%)
+                    </option>
+
+                    <option value="fixed">
+                        Monto fijo ($)
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div data-commission-rows></div>
+
+        <div class="mayvanna-commission-summary">
+            <div>
+                <span>Precio del servicio</span>
+                <strong data-price-total>$0.00</strong>
+            </div>
+
+            <div>
+                <span>Comisión del personal</span>
+                <strong data-staff-total>$0.00</strong>
+            </div>
+
+            <div>
+                <span>Para el negocio</span>
+                <strong data-business-total>$0.00</strong>
+            </div>
+        </div>
+
+        <p
+            class="mayvanna-commission-error"
+            data-commission-message
+            role="status"
+        ></p>
+    `;
+
+    anchor.insertAdjacentElement("afterend", wrapper);
+
+    const totalInput = wrapper.querySelector(
+        "[data-commission-total]"
+    );
+
+    const modeSelect = wrapper.querySelector(
+        "[data-commission-mode]"
+    );
+
+    const rowsContainer = wrapper.querySelector(
+        "[data-commission-rows]"
+    );
+
+    function equalDistribution() {
+        const count = professionals.length;
+
+        if (!count) {
+            allocations = [];
+            return;
+        }
+
+        const totalCents = cents(commissionTotal);
+
+        if (mode === "percentage") {
+            const unit = Math.floor(10000 / count);
+
+            allocations = professionals.map(
+                (person, index) => ({
+                    staffId: String(person.id),
+                    value: index === count - 1
+                        ? (10000 - unit * (count - 1)) / 100
+                        : unit / 100
+                })
+            );
+        } else {
+            const unit = Math.floor(totalCents / count);
+
+            allocations = professionals.map(
+                (person, index) => ({
+                    staffId: String(person.id),
+                    value: (
+                        index === count - 1
+                            ? totalCents - unit * (count - 1)
+                            : unit
+                    ) / 100
+                })
+            );
+        }
+    }
+
+    function getResult() {
+        return calculateCommissionDistribution({
+            price: getPrice(),
+            commissionTotal,
+            mode,
+            allocations
+        });
+    }
+
+    function updateSummary() {
+        const price = Number(getPrice()) || 0;
+        const result = getResult();
+
+        wrapper.querySelector(
+            "[data-price-total]"
+        ).textContent = currency(price);
+
+        wrapper.querySelector(
+            "[data-staff-total]"
+        ).textContent = currency(commissionTotal);
+
+        wrapper.querySelector(
+            "[data-business-total]"
+        ).textContent = result.valid
+            ? currency(result.businessAmount)
+            : "—";
+
+        const message = wrapper.querySelector(
+            "[data-commission-message]"
+        );
+
+        message.textContent = result.message;
+        message.classList.toggle(
+            "valid",
+            result.valid
+        );
+
+        rowsContainer.querySelectorAll(
+            "[data-staff-amount]"
+        ).forEach(element => {
+            const item = result.distributions.find(
+                allocation =>
+                    allocation.staffId ===
+                    element.dataset.staffAmount
+            );
+
+            element.textContent = item
+                ? `Recibe ${currency(item.amount)}`
+                : "";
+        });
+
+        if (typeof onChange === "function") {
+            onChange(result);
+        }
+    }
+
+    function renderRows() {
+        rowsContainer.replaceChildren();
+
+        for (const person of professionals) {
+            const id = String(person.id);
+
+            const allocation = allocations.find(
+                item => item.staffId === id
+            );
+
+            const row = document.createElement("div");
+            row.className = "mayvanna-commission-row";
+
+            row.innerHTML = `
+                <div>
+                    <strong>
+                        ${escapeHTML(person.name)}
+                    </strong>
+
+                    <small
+                        data-staff-amount="${escapeHTML(id)}"
+                    ></small>
+                </div>
+
+                <div>
+                    <label>
+                        ${mode === "percentage" ? "%" : "$"}
+                    </label>
+
+                    <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        data-staff-id="${escapeHTML(id)}"
+                    >
+                </div>
+            `;
+
+            const input = row.querySelector(
+                "[data-staff-id]"
+            );
+
+            input.value = String(allocation?.value ?? 0);
+
+            input.addEventListener("input", () => {
+                const current = allocations.find(
+                    item => item.staffId === id
+                );
+
+                if (current) {
+                    current.value = input.value === ""
+                        ? NaN
+                        : Number(input.value);
+                }
+
+                manuallyEdited = true;
+                updateSummary();
+            });
+
+            rowsContainer.appendChild(row);
+        }
+
+        updateSummary();
+    }
+
+    totalInput.addEventListener("input", () => {
+        commissionTotal = totalInput.value === ""
+            ? NaN
+            : Number(totalInput.value);
+
+        if (!manuallyEdited) {
+            equalDistribution();
+            renderRows();
+        } else {
+            updateSummary();
+        }
+    });
+
+    modeSelect.addEventListener("change", () => {
+        mode = modeSelect.value;
+        manuallyEdited = false;
+
+        equalDistribution();
+        renderRows();
+    });
+
+    function setProfessionals(items) {
+        const next = Array.isArray(items)
+            ? items.filter(item =>
+                item &&
+                item.id !== null &&
+                item.id !== undefined
+            )
+            : [];
+
+        const oldIds = professionals
+            .map(item => String(item.id))
+            .join("|");
+
+        const nextIds = next
+            .map(item => String(item.id))
+            .join("|");
+
+        if (oldIds === nextIds) {
+            return;
+        }
+
+        professionals = next.map(person => ({
+            id: String(person.id),
+            name: String(person.name || "Profesional")
+        }));
+
+        manuallyEdited = false;
+        equalDistribution();
+        renderRows();
+    }
+
+    function setSelected(saved) {
+        if (!saved) {
+            commissionTotal = 0;
+            mode = "percentage";
+            manuallyEdited = false;
+            equalDistribution();
+        } else {
+            commissionTotal = Number(
+                saved.commissionTotal ?? 0
+            );
+
+            mode = saved.mode === "fixed"
+                ? "fixed"
+                : "percentage";
+
+            allocations = Array.isArray(
+                saved.distributions
+            )
+                ? saved.distributions.map(item => ({
+                    staffId: String(item.staffId),
+                    value: Number(item.value)
+                }))
+                : [];
+
+            manuallyEdited = true;
+        }
+
+        totalInput.value = String(commissionTotal);
+        modeSelect.value = mode;
+
+        renderRows();
+    }
+
+    function getValues() {
+        const result = getResult();
+
+        return {
+            valid: result.valid,
+            message: result.message,
+            commissionTotal: roundMoney(
+                commissionTotal
+            ),
+            mode,
+            distributions: result.distributions,
+            businessAmount: result.businessAmount
+        };
+    }
+
+    function reset() {
+        setSelected(null);
+    }
+
+    function refresh() {
+        updateSummary();
+    }
+
+    totalInput.value = "0";
+    equalDistribution();
+    renderRows();
+
+    return {
+        setProfessionals,
+        setSelected,
+        getValues,
+        reset,
+        refresh
+    };
+}
+
+export function getRecordedCommission(
+    appointment,
+    staffId
+) {
+    const distribution =
+        appointment.commissionDistribution;
+
+    if (
+        !distribution ||
+        !Array.isArray(distribution.distributions)
+    ) {
+        return null;
+    }
+
+    const item = distribution.distributions.find(
+        entry =>
+            String(entry.staffId) === String(staffId)
+    );
+
+    return item
+        ? Math.max(0, Number(item.amount) || 0)
+        : 0;
+}

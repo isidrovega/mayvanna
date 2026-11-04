@@ -1,0 +1,223 @@
+
+/*
+ * MAYVANNA BEAUTY STUDIO
+ * css/mayvanna-payroll.css
+ */
+
+.mayvanna-financial-section,
+.staff-payroll-section {
+    color: #500e1d;
+}
+
+.mayvanna-financial-section {
+    background: #f1eeea !important;
+    border: 1px solid #dcd2d1 !important;
+    border-radius: 16px !important;
+    padding: 24px !important;
+}
+
+.mayvanna-financial-section h2,
+.staff-payroll-heading h2 {
+    color: #500e1d !important;
+}
+
+.mayvanna-financial-description {
+    margin: 8px 0 20px;
+    color: #766b70;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.mayvanna-financial-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(180px, 1fr)
+    );
+    gap: 14px;
+}
+
+.mayvanna-financial-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #dcd2d1;
+    border-radius: 12px;
+}
+
+.mayvanna-financial-stat span {
+    color: #766b70;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.mayvanna-financial-stat strong {
+    color: #500e1d;
+    font-size: clamp(19px, 2.5vw, 25px);
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
+
+.mayvanna-financial-stat.highlight {
+    background: #500e1d;
+    border-color: #500e1d;
+}
+
+.mayvanna-financial-stat.highlight span,
+.mayvanna-financial-stat.highlight strong {
+    color: #ffffff;
+}
+
+.mayvanna-financial-warning {
+    margin-top: 16px;
+    padding: 13px;
+    background: #fff5e8;
+    border: 1px solid #e6caa1;
+    border-radius: 9px;
+    color: #795024;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.staff-payroll-section .staff-payroll-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        3,
+        minmax(0, 1fr)
+    );
+    gap: 14px;
+}
+
+.staff-payroll-section .staff-payroll-stat,
+.staff-payroll-section .staff-payroll-card {
+    background: #ffffff !important;
+    color: #500e1d !important;
+    border: 1px solid #dcd2d1 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 5px 18px rgba(80, 14, 29, .04);
+}
+
+.staff-payroll-section .staff-payroll-stat span,
+.staff-payroll-section .staff-payroll-person span,
+.staff-payroll-section .staff-payroll-note {
+    color: #766b70 !important;
+}
+
+.staff-payroll-section .staff-payroll-stat strong,
+.staff-payroll-section .staff-payroll-person strong {
+    color: #500e1d !important;
+}
+
+.staff-payroll-section .staff-payroll-avatar {
+    display: grid;
+    place-items: center;
+    background: #f1eeea !important;
+    border: 1px solid #dcd2d1 !important;
+    color: #500e1d !important;
+    border-radius: 12px;
+}
+
+.mayvanna-payroll-lines {
+    display: grid;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.mayvanna-payroll-lines > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.mayvanna-payroll-lines span {
+    color: #766b70;
+    font-size: 13px;
+}
+
+.mayvanna-payroll-lines strong {
+    color: #500e1d;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+}
+
+.mayvanna-payroll-pending {
+    padding: 14px;
+    background: #f1eeea;
+    border-radius: 10px;
+}
+
+.mayvanna-payroll-pending strong {
+    font-size: 19px;
+}
+
+.mayvanna-payroll-pay {
+    display: block;
+    width: 100%;
+    min-height: 43px;
+    margin: 16px 0;
+    padding: 10px 15px;
+    background: #500e1d;
+    color: #ffffff;
+    border: 1px solid #500e1d;
+    border-radius: 10px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mayvanna-payroll-pay:hover {
+    background: #69172b;
+}
+
+.mayvanna-payroll-paid {
+    padding: 12px;
+    background: #eef6f0;
+    color: #38704d;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.staff-payroll-section .staff-payroll-details summary {
+    color: #500e1d !important;
+}
+
+.staff-payroll-section .staff-payroll-detail-row {
+    border-bottom-color: #e5ddda !important;
+}
+
+.staff-payroll-section .staff-payroll-detail-row span {
+    color: #766b70 !important;
+}
+
+.staff-payroll-section .staff-payroll-detail-row strong {
+    color: #500e1d !important;
+}
+
+.staff-payroll-section .staff-payroll-empty {
+    background: #f1eeea !important;
+    color: #766b70 !important;
+    border-color: #dcd2d1 !important;
+}
+
+@media (max-width: 800px) {
+    .staff-payroll-section .staff-payroll-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .mayvanna-financial-section {
+        padding: 16px !important;
+    }
+
+    .mayvanna-financial-grid {
+        grid-template-columns: 1fr;
+    }
+}

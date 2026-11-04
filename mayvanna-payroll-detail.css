@@ -1,0 +1,177 @@
+
+/* MAYVANNA — NÓMINA INDIVIDUAL */
+
+#mayvannaPayrollDetail {
+    display: grid;
+    gap: 18px;
+    margin-top: 18px;
+    color: #500e1d;
+}
+
+#mayvannaPayrollDetail *,
+#mayvannaPayrollDetail *::before,
+#mayvannaPayrollDetail *::after {
+    box-sizing: border-box;
+}
+
+.mpd-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.mpd-summary article,
+.mpd-person {
+    background: #fff;
+    border: 1px solid #dcd2d1;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.mpd-summary article {
+    display: grid;
+    gap: 10px;
+}
+
+.mpd-summary span,
+.mpd-person p,
+.mpd-person-totals span {
+    color: #766b70;
+    font-size: 12px;
+}
+
+.mpd-summary strong {
+    font-size: clamp(19px, 2.5vw, 25px);
+    color: #500e1d;
+    overflow-wrap: anywhere;
+}
+
+.mpd-person-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.mpd-person-header h3 {
+    margin: 0 0 5px;
+    color: #500e1d;
+    font-size: 19px;
+}
+
+.mpd-person-header p {
+    margin: 0;
+}
+
+.mpd-person-header > strong {
+    color: #500e1d;
+    font-size: 24px;
+    text-align: right;
+}
+
+.mpd-person-header small {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #766b70;
+}
+
+.mpd-person-totals {
+    display: flex;
+    gap: 12px 24px;
+    flex-wrap: wrap;
+    margin: 18px 0;
+    padding: 13px;
+    background: #f1eeea;
+    border-radius: 10px;
+}
+
+.mpd-person-totals b {
+    color: #500e1d;
+}
+
+.mpd-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.mpd-table-wrap table {
+    width: 100%;
+    min-width: 660px;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.mpd-table-wrap th {
+    padding: 12px 10px;
+    background: #f1eeea;
+    color: #500e1d;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.mpd-table-wrap td {
+    padding: 13px 10px;
+    border-bottom: 1px solid #e9e0df;
+    vertical-align: top;
+    color: #500e1d;
+}
+
+.mpd-table-wrap td small {
+    display: block;
+    margin-top: 5px;
+    color: #766b70;
+}
+
+.mpd-pay {
+    margin-top: 18px;
+    padding: 12px 20px;
+    background: #500e1d;
+    color: white;
+    border: 0;
+    border-radius: 9px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mpd-pay:hover {
+    background: #70283a;
+}
+
+.mpd-covered,
+.mpd-empty,
+.mpd-warning {
+    margin: 14px 0 0;
+    padding: 13px;
+    border-radius: 9px;
+    font-size: 13px;
+}
+
+.mpd-covered {
+    background: #eef6f0;
+    color: #38704d !important;
+}
+
+.mpd-empty {
+    background: #f1eeea;
+    color: #766b70;
+}
+
+.mpd-warning {
+    background: #fff5e8;
+    border: 1px solid #e6caa1;
+    color: #795024;
+}
+
+@media (max-width: 700px) {
+    .mpd-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .mpd-person {
+        padding: 14px;
+    }
+}

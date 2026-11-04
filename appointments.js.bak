@@ -1,0 +1,2063 @@
+
+import { getLocalDate, origins } from "./data.js";
+
+import {
+    getAppointments,
+    saveAppointments,
+    findCustomerByPhone,
+    getOrCreateCustomer,
+    addCustomerVisit,
+    generateId
+} from "./storage.js";
+
+import {
+    getServices,
+    getStaff,
+    getActiveStaff,
+    getAvailableTimes,
+    isAppointmentAvailable,
+    getAppointmentStaffIds
+} from "./catalog.js";
+
+import {
+    createMultiServicePicker
+} from "./multi-service.js";
+
+const $ = id => document.getElementById(id);
+
+const modal = $("appointmentModal");
+const appointmentsTable = $("appointmentsTable");
+const phoneInput = $("appointmentPhone");
+const nameInput = $("appointmentName");
+const serviceSelect = $("appointmentService");
+const barberSelect = $("appointmentBarber");
+const dateInput = $("appointmentDate");
+const originSelect = $("appointmentOrigin");
+const statusSelect = $("appointmentStatus");
+const notesInput = $("appointmentNotes");
+const timeContainer = $("appointmentTimes");
+const customerDetection = $("customerDetection");
+const saveButton = $("saveAppointmentButton");
+const modalTitle = $("appointmentModalTitle");
+
+let picker;
+let currentFilter = "all";
+let selectedTime = "";
+let selectedProfessionalIds = [];
+let editingAppointmentId = null;
+let chargingAppointmentId = null;
+let toastTimer = null;
+let saving = false;
+let charging = false;
+
+let professionalPickerContainer;
+let paymentModal;
+let paymentAmount;
+let paymentConfirmButton;
+let paymentRowsContainer;
+let paymentRegisteredTotal;
+let paymentRemainingTotal;
+let paymentValidationMessage;
+
+const ACTIVE_STATUSES = ["pending", "confirmed"];
+
+const STATUS_LABELS = {
+    pending: "Pendiente",
+    confirmed: "Confirmada",
+    completed: "Completada",
+    cancelled: "Cancelada",
+    "no-show": "No asistió"
+};
+
+const PAYMENT_METHOD_LABELS = {
+    cash: "Efectivo",
+    card: "Tarjeta",
+    transfer: "Transferencia"
+};
+
+/* =========================================================
+   UTILIDADES
+========================================================= */
+
+function escapeHTML(value) {
+    const element = document.createElement("div");
+    element.textContent = String(value ?? "");
+    return element.innerHTML;
+}
+
+function money(value) {
+    return new Intl.NumberFormat("es-MX", {
+        style: "currency",
+        currency: "MXN",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(Number(value) || 0);
+}
+
+function formatTime(time) {
+    if (!time) return "—";
+
+    const [hours, minutes] = String(time)
+        .split(":")
+        .map(Number);
+
+    if (
+        !Number.isFinite(hours) ||
+        !Number.isFinite(minutes)
+    ) {
+        return String(time);
+    }
+
+    return (
+        `${hours % 12 || 12}:` +
+        `${String(minutes).padStart(2, "0")} ` +
+        `${hours >= 12 ? "PM" : "AM"}`
+    );
+}
+
+function formatDate(value) {
+    if (!value) return "—";
+
+    const date = new Date(`${value}T12:00:00`);
+
+    if (Number.isNaN(date.getTime())) {
+        return String(value);
+    }
+
+    return new Intl.DateTimeFormat("es-MX", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    }).format(date);
+}
+
+function normalizePhone(value) {
+    return String(value || "").replace(/\D/g, "");
+}
+
+function getService(id) {
+    return getServices().find(
+        service => String(service.id) === String(id)
+    ) || null;
+}
+
+function getProfessional(id) {
+    return getStaff().find(
+        person => String(person.id) === String(id)
+    ) || null;
+}
+
+function getAppointmentServiceIds(appointment) {
+    return Array.isArray(appointment.serviceIds) &&
+        appointment.serviceIds.length
+            ? appointment.serviceIds.map(String)
+            : appointment.serviceId
+                ? [String(appointment.serviceId)]
+                : [];
+}
+
+function getServiceNames(appointment) {
+    const ids = getAppointmentServiceIds(appointment);
+
+    if (!ids.length) {
+        return appointment.serviceName ||
+            "Servicio no disponible";
+    }
+
+    return ids.map(id =>
+        getService(id)?.name ||
+        (
+            ids.length === 1
+                ? appointment.serviceName
+                : null
+        ) ||
+        "Servicio no disponible"
+    ).join(" + ");
+}
+
+function getProfessionalNames(appointment) {
+    const ids = getAppointmentStaffIds(appointment);
+
+    if (!ids.length) {
+        return appointment.professionalName ||
+            "Sin profesional";
+    }
+
+    return ids.map(id =>
+        getProfessional(id)?.name ||
+        (
+            ids.length === 1
+                ? appointment.professionalName
+                : null
+        ) ||
+        "Profesional no disponible"
+    ).join(" + ");
+}
+
+function getAppointmentPrice(appointment) {
+    if (
+        appointment.amountCharged !== undefined &&
+        appointment.amountCharged !== null &&
+        appointment.amountCharged !== ""
+    ) {
+        return Number(appointment.amountCharged) || 0;
+    }
+
+    if (
+        appointment.price !== undefined &&
+        appointment.price !== null &&
+        appointment.price !== ""
+    ) {
+        return Number(appointment.price) || 0;
+    }
+
+    return Number(
+        getService(appointment.serviceId)?.price
+    ) || 0;
+}
+
+function showToast(message) {
+    const toast = $("toast");
+
+    if (!toast) {
+        console.info(message);
+        return;
+    }
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2800);
+}
+
+function notifyAppointmentsChanged() {
+    window.dispatchEvent(
+        new CustomEvent("agendapro:appointments-changed")
+    );
+}
+
+function refreshAppointments() {
+    renderAppointments();
+    notifyAppointmentsChanged();
+}
+
+/* =========================================================
+   SELECTOR DE VARIOS PROFESIONALES
+========================================================= */
+
+function loadMayvannaStyles() {
+    if (
+        document.querySelector(
+            'link[data-mayvanna-professional-styles]'
+        )
+    ) {
+        return;
+    }
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href =
+        "css/mayvanna-multi-professional.css?v=1";
+
+    link.dataset.mayvannaProfessionalStyles = "true";
+
+    document.head.appendChild(link);
+}
+
+function getSelectedProfessionalIds() {
+    return [...selectedProfessionalIds];
+}
+
+function syncPrimaryProfessional() {
+    barberSelect.value =
+        selectedProfessionalIds[0] || "";
+}
+
+function createProfessionalPicker() {
+    if (professionalPickerContainer) return;
+
+    loadMayvannaStyles();
+
+    professionalPickerContainer =
+        document.createElement("div");
+
+    professionalPickerContainer.id =
+        "mayvannaProfessionalPicker";
+
+    professionalPickerContainer.innerHTML = `
+        <div class="mayvanna-professional-heading">
+            <strong>Profesionales asignados</strong>
+            <span>Puedes seleccionar más de uno</span>
+        </div>
+
+        <div
+            class="mayvanna-professional-options"
+            id="mayvannaProfessionalOptions"
+        ></div>
+
+        <p class="mayvanna-professional-help">
+            El servicio se cobra una sola vez,
+            aunque participen varias personas.
+        </p>
+    `;
+
+    barberSelect.insertAdjacentElement(
+        "afterend",
+        professionalPickerContainer
+    );
+
+    barberSelect.style.display = "none";
+
+    const label = document.querySelector(
+        `label[for="${barberSelect.id}"]`
+    );
+
+    if (label) label.style.display = "none";
+
+    professionalPickerContainer.addEventListener(
+        "change",
+        event => {
+            const checkbox = event.target.closest(
+                'input[type="checkbox"]'
+            );
+
+            if (!checkbox) return;
+
+            const id = String(checkbox.value);
+
+            if (checkbox.checked) {
+                selectedProfessionalIds = [
+                    ...new Set([
+                        ...selectedProfessionalIds,
+                        id
+                    ])
+                ];
+            } else {
+                selectedProfessionalIds =
+                    selectedProfessionalIds.filter(
+                        value => value !== id
+                    );
+            }
+
+            syncPrimaryProfessional();
+
+            selectedTime = "";
+            renderTimes();
+        }
+    );
+}
+
+function populateStaffSelector(preferredIds = null) {
+    createProfessionalPicker();
+
+    const serviceIds = picker.getValues().serviceIds;
+
+    const staff = serviceIds.length
+        ? getActiveStaff(serviceIds)
+        : [];
+
+    const validIds = new Set(
+        staff.map(person => String(person.id))
+    );
+
+    if (preferredIds !== null) {
+        selectedProfessionalIds = (
+            Array.isArray(preferredIds)
+                ? preferredIds
+                : [preferredIds]
+        ).map(String);
+    }
+
+    selectedProfessionalIds = [
+        ...new Set(selectedProfessionalIds)
+    ].filter(id => validIds.has(id));
+
+    barberSelect.replaceChildren();
+
+    barberSelect.add(
+        new Option("Seleccionar personal", "")
+    );
+
+    for (const person of staff) {
+        barberSelect.add(
+            new Option(person.name, person.id)
+        );
+    }
+
+    syncPrimaryProfessional();
+
+    const container = $("mayvannaProfessionalOptions");
+    container.replaceChildren();
+
+    if (!staff.length) {
+        const empty = document.createElement("p");
+        empty.className = "mayvanna-professional-empty";
+        empty.textContent =
+            "No hay profesionales activos para estos servicios.";
+
+        container.appendChild(empty);
+        return;
+    }
+
+    for (const person of staff) {
+        const id = String(person.id);
+
+        const label = document.createElement("label");
+        label.className = "mayvanna-professional-option";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = id;
+        checkbox.checked =
+            selectedProfessionalIds.includes(id);
+
+        const initials = document.createElement("span");
+        initials.className =
+            "mayvanna-professional-initials";
+
+        initials.textContent = String(person.name || "P")
+            .trim()
+            .split(/\s+/)
+            .slice(0, 2)
+            .map(word => word.charAt(0))
+            .join("")
+            .toUpperCase();
+
+        const name = document.createElement("span");
+        name.className = "mayvanna-professional-name";
+        name.textContent = person.name;
+
+        label.append(checkbox, initials, name);
+        container.appendChild(label);
+    }
+}
+
+/* =========================================================
+   FORMULARIO
+========================================================= */
+
+function resetForm() {
+    editingAppointmentId = null;
+    selectedTime = "";
+    selectedProfessionalIds = [];
+
+    phoneInput.value = "";
+    nameInput.value = "";
+    notesInput.value = "";
+
+    customerDetection.innerHTML = "";
+
+    originSelect.value = "whatsapp";
+    statusSelect.value = "confirmed";
+
+    dateInput.min = getLocalDate();
+    dateInput.value = getLocalDate();
+
+    picker.reset();
+    populateStaffSelector([]);
+
+    saveButton.textContent = "Guardar cita";
+
+    if (modalTitle) {
+        modalTitle.textContent = "Nueva cita";
+    }
+}
+
+function openModal() {
+    resetForm();
+
+    modal.classList.remove("hidden");
+    document.body.classList.add("modal-open");
+
+    setTimeout(() => phoneInput.focus(), 50);
+}
+
+function closeModal() {
+    modal.classList.add("hidden");
+    document.body.classList.remove("modal-open");
+
+    editingAppointmentId = null;
+}
+
+function openEditAppointment(id) {
+    const appointment = getAppointments().find(
+        item => String(item.id) === String(id)
+    );
+
+    if (!appointment) {
+        showToast("No se encontró la cita.");
+        return;
+    }
+
+    if (!ACTIVE_STATUSES.includes(appointment.status)) {
+        showToast(
+            "Solo puedes editar citas pendientes o confirmadas."
+        );
+        return;
+    }
+
+    const ids = getAppointmentServiceIds(appointment);
+    const professionalIds =
+        getAppointmentStaffIds(appointment);
+
+    const validStaffIds = new Set(
+        getActiveStaff(ids).map(person => String(person.id))
+    );
+
+    if (
+        !professionalIds.length ||
+        !professionalIds.every(id =>
+            validStaffIds.has(String(id))
+        )
+    ) {
+        showToast(
+            "Uno o más profesionales ya no están activos " +
+            "o no realizan estos servicios."
+        );
+        return;
+    }
+
+    resetForm();
+
+    editingAppointmentId = appointment.id;
+
+    phoneInput.value = appointment.phone || "";
+    nameInput.value = appointment.clientName || "";
+    notesInput.value = appointment.notes || "";
+
+    dateInput.min = "";
+    dateInput.value =
+        appointment.date || getLocalDate();
+
+    originSelect.value =
+        appointment.origin || "whatsapp";
+
+    statusSelect.value = appointment.status;
+
+    picker.setSelected(
+        ids,
+        getAppointmentPrice(appointment),
+        true
+    );
+
+    populateStaffSelector(professionalIds);
+
+    selectedTime = appointment.time || "";
+    renderTimes();
+
+    saveButton.textContent = "Guardar cambios";
+
+    if (modalTitle) {
+        modalTitle.textContent = "Editar cita";
+    }
+
+    modal.classList.remove("hidden");
+    document.body.classList.add("modal-open");
+}
+
+function detectCustomer() {
+    const phone = phoneInput.value.trim();
+
+    if (normalizePhone(phone).length < 7) {
+        customerDetection.innerHTML = "";
+        return;
+    }
+
+    const customer = findCustomerByPhone(phone);
+
+    if (customer) {
+        nameInput.value = customer.name || "";
+
+        customerDetection.innerHTML = `
+            <div class="customer-found">
+                ✓ Cliente encontrado:
+                <strong>${escapeHTML(customer.name)}</strong>
+            </div>
+        `;
+    } else {
+        customerDetection.innerHTML = `
+            <div class="customer-new">
+                Cliente nuevo. Se registrará al guardar.
+            </div>
+        `;
+    }
+}
+
+/* =========================================================
+   HORARIOS
+========================================================= */
+
+function renderTimes() {
+    const values = picker.getValues();
+    const professionalIds =
+        getSelectedProfessionalIds();
+
+    if (
+        !dateInput.value ||
+        !values.serviceIds.length ||
+        !professionalIds.length
+    ) {
+        selectedTime = "";
+
+        timeContainer.innerHTML = `
+            <div class="empty" style="grid-column:1/-1">
+                Selecciona servicios, profesionales y fecha.
+            </div>
+        `;
+        return;
+    }
+
+    const times = getAvailableTimes({
+        date: dateInput.value,
+        serviceIds: values.serviceIds,
+        staffIds: professionalIds,
+        duration: values.duration,
+        excludeAppointmentId: editingAppointmentId
+    });
+
+    if (!times.includes(selectedTime)) {
+        selectedTime = times[0] || "";
+    }
+
+    if (!times.length) {
+        timeContainer.innerHTML = `
+            <div class="empty" style="grid-column:1/-1">
+                No hay horarios disponibles para
+                todos los profesionales seleccionados.
+            </div>
+        `;
+        return;
+    }
+
+    timeContainer.innerHTML = times.map(time => `
+        <button
+            type="button"
+            class="time-button ${
+                selectedTime === time ? "selected" : ""
+            }"
+            data-time="${time}"
+            aria-pressed="${selectedTime === time}"
+        >
+            ${formatTime(time)}
+        </button>
+    `).join("");
+}
+
+/* =========================================================
+   VALIDACIÓN Y GUARDADO
+========================================================= */
+
+function validateForm() {
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+    const digits = normalizePhone(phone);
+    const values = picker.getValues();
+    const professionalIds =
+        getSelectedProfessionalIds();
+
+    if (!name) {
+        showToast("Ingresa el nombre del cliente.");
+        nameInput.focus();
+        return false;
+    }
+
+    if (digits.length < 7 || digits.length > 15) {
+        showToast(
+            "Ingresa un teléfono válido de 7 a 15 dígitos."
+        );
+        phoneInput.focus();
+        return false;
+    }
+
+    if (!values.serviceIds.length) {
+        showToast("Selecciona al menos un servicio.");
+        return false;
+    }
+
+    if (
+        !Number.isFinite(values.duration) ||
+        values.duration <= 0
+    ) {
+        showToast("La duración de los servicios no es válida.");
+        return false;
+    }
+
+    if (
+        !Number.isFinite(values.price) ||
+        values.price < 0
+    ) {
+        showToast("Ingresa un precio válido.");
+        return false;
+    }
+
+    if (!professionalIds.length) {
+        showToast("Selecciona al menos un profesional.");
+        return false;
+    }
+
+    if (!dateInput.value || !selectedTime) {
+        showToast("Selecciona fecha y horario.");
+        return false;
+    }
+
+    const available = isAppointmentAvailable({
+        id: editingAppointmentId,
+        date: dateInput.value,
+        time: selectedTime,
+        serviceId: values.serviceId,
+        serviceIds: values.serviceIds,
+        barberIds: professionalIds,
+        duration: values.duration
+    });
+
+    if (!available) {
+        showToast(
+            "El horario no está disponible para " +
+            "todos los profesionales seleccionados."
+        );
+
+        selectedTime = "";
+        renderTimes();
+        return false;
+    }
+
+    return true;
+}
+
+function saveAppointment() {
+    if (saving || !validateForm()) return;
+
+    saving = true;
+    saveButton.disabled = true;
+
+    try {
+        const appointments = getAppointments();
+
+        const existing = editingAppointmentId
+            ? appointments.find(item =>
+                String(item.id) ===
+                String(editingAppointmentId)
+            )
+            : null;
+
+        if (editingAppointmentId && !existing) {
+            throw new Error(
+                "La cita que intentas editar ya no existe."
+            );
+        }
+
+        if (
+            existing &&
+            !ACTIVE_STATUSES.includes(existing.status)
+        ) {
+            throw new Error(
+                "Esta cita ya no se puede editar."
+            );
+        }
+
+        const values = picker.getValues();
+        const services = picker.getSelectedServices();
+
+        const professionalIds =
+            getSelectedProfessionalIds();
+
+        const professionals = professionalIds.map(
+            id => getProfessional(id)
+        );
+
+        if (
+            !professionals.length ||
+            professionals.some(person => !person)
+        ) {
+            throw new Error(
+                "Uno o más profesionales seleccionados no existen."
+            );
+        }
+
+        if (!isAppointmentAvailable({
+            id: editingAppointmentId,
+            date: dateInput.value,
+            time: selectedTime,
+            serviceId: values.serviceId,
+            serviceIds: values.serviceIds,
+            barberIds: professionalIds,
+            duration: values.duration
+        })) {
+            throw new Error(
+                "El horario acaba de quedar ocupado."
+            );
+        }
+
+        const customer = getOrCreateCustomer(
+            nameInput.value.trim(),
+            phoneInput.value.trim()
+        );
+
+        const now = new Date().toISOString();
+
+        const appointment = {
+            ...(existing || {}),
+
+            id: existing?.id ||
+                generateId("appointment"),
+
+            date: dateInput.value,
+            time: selectedTime,
+
+            clientName: nameInput.value.trim(),
+            phone: phoneInput.value.trim(),
+            customerId: customer.id,
+
+            serviceId: values.serviceId,
+            serviceIds: values.serviceIds,
+
+            serviceName: services.map(
+                service => service.name
+            ).join(" + "),
+
+            barberId: professionalIds[0],
+            barberIds: professionalIds,
+
+            professionalName: professionals.map(
+                person => person.name
+            ).join(" + "),
+
+            duration: values.duration,
+            originalPrice: values.originalPrice,
+            price: values.price,
+            customPrice: values.customPrice,
+
+            origin: originSelect.value,
+            status: statusSelect.value,
+            notes: notesInput.value.trim(),
+
+            loyaltyApplied:
+                existing?.loyaltyApplied || false,
+
+            createdAt: existing?.createdAt || now,
+            updatedAt: now
+        };
+
+        if (existing) {
+            const index = appointments.findIndex(
+                item => String(item.id) ===
+                    String(existing.id)
+            );
+
+            appointments[index] = appointment;
+        } else {
+            appointments.push(appointment);
+        }
+
+        saveAppointments(appointments);
+
+        notifyAppointmentsChanged();
+        closeModal();
+        renderAppointments();
+
+        showToast(
+            existing
+                ? "Cita actualizada correctamente."
+                : "Cita registrada correctamente."
+        );
+    } catch (error) {
+        console.error("Error al guardar:", error);
+
+        showToast(
+            error.message || "No se pudo guardar la cita."
+        );
+    } finally {
+        saving = false;
+        saveButton.disabled = false;
+    }
+}
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+function getFilteredAppointments() {
+    let appointments = [...getAppointments()];
+
+    const params = new URLSearchParams(
+        window.location.search
+    );
+
+    const start = params.get("start");
+    const end = params.get("end");
+
+    if (
+        /^\d{4}-\d{2}-\d{2}$/.test(start || "") &&
+        /^\d{4}-\d{2}-\d{2}$/.test(end || "")
+    ) {
+        appointments = appointments.filter(
+            appointment =>
+                appointment.date >= start &&
+                appointment.date <= end
+        );
+    }
+
+    if (currentFilter === "today") {
+        appointments = appointments.filter(
+            appointment =>
+                appointment.date === getLocalDate()
+        );
+    } else if (currentFilter !== "all") {
+        appointments = appointments.filter(
+            appointment =>
+                appointment.status === currentFilter
+        );
+    }
+
+    return appointments.sort((a, b) =>
+        `${b.date} ${b.time || ""}`.localeCompare(
+            `${a.date} ${a.time || ""}`
+        )
+    );
+}
+
+/* =========================================================
+   COBROS MIXTOS
+========================================================= */
+
+function paymentCents(value) {
+    const number = Number(value);
+
+    return Number.isFinite(number)
+        ? Math.round(number * 100)
+        : NaN;
+}
+
+function getPaymentRows() {
+    return Array.from(
+        paymentRowsContainer.querySelectorAll(
+            ".varden-payment-row"
+        )
+    );
+}
+
+function describePayments(payments) {
+    return payments.map(payment =>
+        `${PAYMENT_METHOD_LABELS[payment.method] || payment.method}: ` +
+        money(payment.amount)
+    ).join(" + ");
+}
+
+function addPaymentRow(method = "cash", amount = "") {
+    const row = document.createElement("div");
+    row.className = "varden-payment-row";
+
+    const select = document.createElement("select");
+    select.className = "varden-payment-method";
+    select.setAttribute("aria-label", "Método de pago");
+
+    for (const [id, label] of Object.entries(
+        PAYMENT_METHOD_LABELS
+    )) {
+        select.add(new Option(label, id));
+    }
+
+    select.value = method;
+
+    const input = document.createElement("input");
+    input.className = "varden-payment-part";
+    input.type = "number";
+    input.min = "0";
+    input.step = "0.01";
+    input.inputMode = "decimal";
+    input.placeholder = "0.00";
+    input.value = amount;
+    input.setAttribute(
+        "aria-label",
+        "Importe del método"
+    );
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "varden-payment-remove";
+    remove.textContent = "×";
+    remove.setAttribute(
+        "aria-label",
+        "Eliminar método"
+    );
+
+    remove.addEventListener("click", () => {
+        if (getPaymentRows().length <= 1) {
+            showToast(
+                "Debe existir al menos un método de pago."
+            );
+            return;
+        }
+
+        row.remove();
+        updatePaymentTotal();
+    });
+
+    select.addEventListener(
+        "change",
+        updatePaymentTotal
+    );
+
+    input.addEventListener(
+        "input",
+        updatePaymentTotal
+    );
+
+    row.append(select, input, remove);
+    paymentRowsContainer.appendChild(row);
+
+    updatePaymentTotal();
+}
+
+function resetPaymentRows(total) {
+    paymentRowsContainer.replaceChildren();
+
+    addPaymentRow(
+        "cash",
+        Number(total).toFixed(2)
+    );
+}
+
+function getPaymentDistribution() {
+    const totals = new Map();
+
+    for (const row of getPaymentRows()) {
+        const method = row.querySelector(
+            ".varden-payment-method"
+        ).value;
+
+        const input = row.querySelector(
+            ".varden-payment-part"
+        );
+
+        const raw = input.value.trim();
+        const amount = paymentCents(raw);
+
+        if (
+            !Object.hasOwn(PAYMENT_METHOD_LABELS, method) ||
+            raw === "" ||
+            !Number.isFinite(amount) ||
+            amount < 0
+        ) {
+            return null;
+        }
+
+        totals.set(
+            method,
+            (totals.get(method) || 0) + amount
+        );
+    }
+
+    return [...totals.entries()]
+        .filter(([, amount]) => amount > 0)
+        .map(([method, amount]) => ({
+            method,
+            amount: amount / 100
+        }));
+}
+
+/* =========================================================
+   ACCIONES DE LA TABLA
+========================================================= */
+
+function renderActions(appointment) {
+    const id = escapeHTML(appointment.id);
+
+    if (appointment.status === "pending") {
+        return `
+            <button class="mini-button"
+                data-action="confirmed"
+                data-id="${id}">
+                Confirmar
+            </button>
+
+            <button class="mini-button"
+                data-action="edit"
+                data-id="${id}">
+                Editar
+            </button>
+
+            <button class="mini-button danger"
+                data-action="cancelled"
+                data-id="${id}">
+                Cancelar
+            </button>
+        `;
+    }
+
+    if (appointment.status === "confirmed") {
+        return `
+            <button class="mini-button"
+                data-action="charge"
+                data-id="${id}">
+                Completar / Cobrar
+            </button>
+
+            <button class="mini-button"
+                data-action="edit"
+                data-id="${id}">
+                Editar
+            </button>
+
+            <button class="mini-button"
+                data-action="no-show"
+                data-id="${id}">
+                No asistió
+            </button>
+
+            <button class="mini-button danger"
+                data-action="cancelled"
+                data-id="${id}">
+                Cancelar
+            </button>
+        `;
+    }
+
+    if (
+        ["cancelled", "no-show"].includes(
+            appointment.status
+        )
+    ) {
+        return `
+            <button class="mini-button"
+                data-action="pending"
+                data-id="${id}">
+                Restaurar
+            </button>
+        `;
+    }
+
+    if (appointment.status === "completed") {
+        const methodDescription =
+            Array.isArray(appointment.payments) &&
+            appointment.payments.length
+                ? describePayments(appointment.payments)
+                : PAYMENT_METHOD_LABELS[
+                    appointment.paymentMethod
+                ] ||
+                appointment.paymentMethod ||
+                "Método no registrado";
+
+        return `
+            <span class="client-phone">
+                ${
+                    appointment.paid
+                        ? `
+                            Cobrado ·
+                            ${money(getAppointmentPrice(appointment))}
+                            ·
+                            ${escapeHTML(methodDescription)}
+                        `
+                        : "Finalizada"
+                }
+            </span>
+        `;
+    }
+
+    return "";
+}
+
+/* =========================================================
+   TABLA DE CITAS
+========================================================= */
+
+function renderAppointments() {
+    const appointments = getFilteredAppointments();
+
+    if (!appointments.length) {
+        appointmentsTable.innerHTML = `
+            <tr>
+                <td colspan="8">
+                    <div class="empty">
+                        No hay citas para el filtro seleccionado.
+                    </div>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    appointmentsTable.innerHTML = appointments.map(
+        appointment => {
+            const status = Object.hasOwn(
+                STATUS_LABELS,
+                appointment.status
+            )
+                ? appointment.status
+                : "pending";
+
+            const origin =
+                origins[appointment.origin] ||
+                appointment.origin ||
+                "—";
+
+            return `
+                <tr>
+                    <td>
+                        ${escapeHTML(formatDate(appointment.date))}
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${escapeHTML(formatTime(appointment.time))}
+                        </strong>
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${escapeHTML(
+                                appointment.clientName || "Cliente"
+                            )}
+                        </strong>
+
+                        <div class="client-phone">
+                            ${escapeHTML(appointment.phone || "")}
+                        </div>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(getServiceNames(appointment))}
+
+                        <div class="client-phone">
+                            ${Number(appointment.duration) || 0} min
+                            ·
+                            ${money(getAppointmentPrice(appointment))}
+                        </div>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            getProfessionalNames(appointment)
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(origin)}
+                    </td>
+
+                    <td>
+                        <span class="status ${status}">
+                            ${STATUS_LABELS[status]}
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="table-actions">
+                            ${renderActions(appointment)}
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+    ).join("");
+}
+
+/* =========================================================
+   MODAL DE COBRO
+========================================================= */
+
+function createPaymentModal() {
+    const wrapper = document.createElement("div");
+
+    wrapper.id = "agendaproPaymentModal";
+    wrapper.className = "agendapro-payment-overlay";
+    wrapper.hidden = true;
+
+    wrapper.innerHTML = `
+        <section
+            class="agendapro-payment-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="agendaproPaymentTitle"
+        >
+            <div class="agendapro-payment-header">
+                <div>
+                    <h2 id="agendaproPaymentTitle">
+                        Cobrar cita
+                    </h2>
+
+                    <p>
+                        Registra el importe y distribuye
+                        el pago entre uno o varios métodos.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="agendapro-payment-close"
+                    data-payment-action="close"
+                    aria-label="Cerrar"
+                >×</button>
+            </div>
+
+            <div class="agendapro-payment-body">
+                <div class="agendapro-payment-details">
+                    <div>
+                        <span>Cliente</span>
+                        <strong id="agendaproPaymentCustomer">
+                            —
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Servicios</span>
+                        <strong id="agendaproPaymentService">
+                            —
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Profesionales</span>
+                        <strong id="agendaproPaymentProfessional">
+                            —
+                        </strong>
+                    </div>
+                </div>
+
+                <label
+                    class="agendapro-payment-label"
+                    for="agendaproPaymentAmount"
+                >
+                    Total a cobrar (MXN)
+                </label>
+
+                <div class="agendapro-payment-amount-field">
+                    <span>$</span>
+
+                    <input
+                        id="agendaproPaymentAmount"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        required
+                    >
+                </div>
+
+                <section class="varden-payment-section">
+                    <h3>Distribución del pago</h3>
+
+                    <p>
+                        Divide el importe entre efectivo,
+                        tarjeta o transferencia.
+                    </p>
+
+                    <div id="vardenPaymentRows"></div>
+
+                    <button
+                        type="button"
+                        class="varden-payment-add"
+                        id="vardenAddPayment"
+                    >
+                        + Agregar método de pago
+                    </button>
+
+                    <div class="varden-payment-summary">
+                        <div>
+                            <span>Total distribuido</span>
+                            <strong id="vardenPaymentRegistered">
+                                $0.00
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span id="vardenPaymentRemainingLabel">
+                                Restante
+                            </span>
+                            <strong id="vardenPaymentRemaining">
+                                $0.00
+                            </strong>
+                        </div>
+                    </div>
+
+                    <p
+                        id="vardenPaymentValidation"
+                        class="varden-payment-validation"
+                        role="status"
+                        aria-live="polite"
+                    ></p>
+                </section>
+
+                <div class="agendapro-payment-total">
+                    <span>Total a registrar</span>
+                    <strong id="agendaproPaymentTotal">
+                        $0.00
+                    </strong>
+                </div>
+            </div>
+
+            <div class="agendapro-payment-footer">
+                <button
+                    type="button"
+                    class="agendapro-payment-cancel"
+                    data-payment-action="close"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="button"
+                    class="agendapro-payment-confirm"
+                    id="agendaproConfirmPayment"
+                >
+                    Confirmar cobro
+                </button>
+            </div>
+        </section>
+    `;
+
+    document.body.appendChild(wrapper);
+
+    paymentModal = wrapper;
+    paymentAmount = $("agendaproPaymentAmount");
+    paymentConfirmButton = $("agendaproConfirmPayment");
+
+    paymentRowsContainer = $("vardenPaymentRows");
+    paymentRegisteredTotal = $("vardenPaymentRegistered");
+    paymentRemainingTotal = $("vardenPaymentRemaining");
+    paymentValidationMessage = $("vardenPaymentValidation");
+
+    paymentAmount.addEventListener(
+        "input",
+        updatePaymentTotal
+    );
+
+    $("vardenAddPayment").addEventListener(
+        "click",
+        () => {
+            const rows = getPaymentRows();
+
+            if (rows.length >= 3) {
+                showToast(
+                    "Puedes utilizar hasta tres métodos."
+                );
+                return;
+            }
+
+            const used = new Set(
+                rows.map(row =>
+                    row.querySelector(
+                        ".varden-payment-method"
+                    ).value
+                )
+            );
+
+            const next = Object.keys(
+                PAYMENT_METHOD_LABELS
+            ).find(method => !used.has(method));
+
+            addPaymentRow(next || "cash", "");
+        }
+    );
+
+    paymentConfirmButton.addEventListener(
+        "click",
+        confirmPayment
+    );
+
+    paymentModal.addEventListener(
+        "click",
+        event => {
+            if (
+                event.target === paymentModal ||
+                event.target.closest(
+                    '[data-payment-action="close"]'
+                )
+            ) {
+                closePaymentModal();
+            }
+        }
+    );
+}
+
+function updatePaymentTotal() {
+    const rawTotal = paymentAmount.value.trim();
+    const expected = paymentCents(rawTotal);
+
+    let registered = 0;
+    let valid = getPaymentRows().length > 0;
+
+    for (const row of getPaymentRows()) {
+        const input = row.querySelector(
+            ".varden-payment-part"
+        );
+
+        const raw = input.value.trim();
+        const value = paymentCents(raw);
+
+        if (
+            raw === "" ||
+            !Number.isFinite(value) ||
+            value < 0
+        ) {
+            valid = false;
+            continue;
+        }
+
+        registered += value;
+    }
+
+    const validTotal =
+        rawTotal !== "" &&
+        Number.isFinite(expected) &&
+        expected >= 0;
+
+    const difference = validTotal
+        ? expected - registered
+        : 0;
+
+    $("agendaproPaymentTotal").textContent = money(
+        validTotal ? expected / 100 : 0
+    );
+
+    paymentRegisteredTotal.textContent = money(
+        registered / 100
+    );
+
+    paymentRemainingTotal.textContent = money(
+        Math.abs(difference) / 100
+    );
+
+    $("vardenPaymentRemainingLabel").textContent =
+        difference < 0 ? "Excedente" : "Restante";
+
+    const ready =
+        validTotal &&
+        valid &&
+        difference === 0;
+
+    paymentValidationMessage.classList.toggle(
+        "valid",
+        ready
+    );
+
+    if (ready) {
+        paymentValidationMessage.textContent =
+            "✓ Los importes coinciden. Listo para cobrar.";
+    } else if (!validTotal) {
+        paymentValidationMessage.textContent =
+            "Ingresa un total válido.";
+    } else if (!valid) {
+        paymentValidationMessage.textContent =
+            "Completa los importes de cada método.";
+    } else if (difference > 0) {
+        paymentValidationMessage.textContent =
+            `Falta distribuir ${money(difference / 100)}.`;
+    } else {
+        paymentValidationMessage.textContent =
+            `El pago excede el total por ${money(-difference / 100)}.`;
+    }
+
+    if (!charging) {
+        paymentConfirmButton.disabled = !ready;
+    }
+}
+
+function openPaymentModal(id) {
+    const appointment = getAppointments().find(
+        item => String(item.id) === String(id)
+    );
+
+    if (!appointment) {
+        showToast("No se encontró la cita.");
+        return;
+    }
+
+    if (appointment.status !== "confirmed") {
+        showToast(
+            "Solo puedes cobrar citas confirmadas."
+        );
+        return;
+    }
+
+    if (appointment.paid) {
+        showToast("Esta cita ya fue cobrada.");
+        return;
+    }
+
+    chargingAppointmentId = appointment.id;
+
+    $("agendaproPaymentCustomer").textContent =
+        appointment.clientName || "Cliente";
+
+    $("agendaproPaymentService").textContent =
+        getServiceNames(appointment);
+
+    $("agendaproPaymentProfessional").textContent =
+        getProfessionalNames(appointment);
+
+    const total = getAppointmentPrice(appointment);
+
+    paymentAmount.value = total.toFixed(2);
+    resetPaymentRows(total);
+
+    paymentModal.hidden = false;
+    document.body.classList.add("modal-open");
+
+    setTimeout(() => {
+        paymentAmount.focus();
+        paymentAmount.select();
+    }, 50);
+}
+
+function closePaymentModal() {
+    if (charging) return;
+
+    paymentModal.hidden = true;
+    chargingAppointmentId = null;
+
+    if (modal.classList.contains("hidden")) {
+        document.body.classList.remove("modal-open");
+    }
+}
+
+function confirmPayment() {
+    if (charging || !chargingAppointmentId) {
+        return;
+    }
+
+    const raw = paymentAmount.value.trim();
+    const amountCents = paymentCents(raw);
+
+    if (
+        raw === "" ||
+        !Number.isFinite(amountCents) ||
+        amountCents < 0
+    ) {
+        showToast("Ingresa un monto válido.");
+        paymentAmount.focus();
+        return;
+    }
+
+    const payments = getPaymentDistribution();
+
+    if (!payments) {
+        showToast(
+            "Revisa los métodos y sus importes."
+        );
+        return;
+    }
+
+    const distributedCents = payments.reduce(
+        (total, payment) =>
+            total + paymentCents(payment.amount),
+        0
+    );
+
+    if (distributedCents !== amountCents) {
+        showToast(
+            "La suma de los métodos debe coincidir " +
+            "exactamente con el total."
+        );
+        return;
+    }
+
+    const amount = amountCents / 100;
+
+    charging = true;
+    paymentConfirmButton.disabled = true;
+
+    try {
+        const appointments = getAppointments();
+
+        const appointment = appointments.find(
+            item =>
+                String(item.id) ===
+                String(chargingAppointmentId)
+        );
+
+        if (
+            !appointment ||
+            appointment.status !== "confirmed" ||
+            appointment.paid
+        ) {
+            throw new Error(
+                "La cita no está disponible para cobro."
+            );
+        }
+
+        const now = new Date().toISOString();
+
+        appointment.amountCharged = amount;
+        appointment.payments = payments;
+
+        appointment.paymentMethod =
+            payments.length === 0
+                ? "cash"
+                : payments.length === 1
+                    ? payments[0].method
+                    : "mixed";
+
+        appointment.paid = true;
+        appointment.paidAt = now;
+        appointment.status = "completed";
+        appointment.updatedAt = now;
+
+        if (!appointment.loyaltyApplied) {
+            const registered = addCustomerVisit(
+                appointment.phone
+            );
+
+            if (registered) {
+                appointment.loyaltyApplied = true;
+            }
+        }
+
+        saveAppointments(appointments);
+
+        chargingAppointmentId = null;
+        paymentModal.hidden = true;
+
+        if (modal.classList.contains("hidden")) {
+            document.body.classList.remove("modal-open");
+        }
+
+        refreshAppointments();
+
+        showToast(
+            `Cobro registrado: ${money(amount)}` +
+            (
+                payments.length
+                    ? ` · ${describePayments(payments)}`
+                    : ""
+            )
+        );
+    } catch (error) {
+        console.error("Error al cobrar:", error);
+
+        showToast(
+            error.message || "No se pudo cobrar."
+        );
+    } finally {
+        charging = false;
+        paymentConfirmButton.disabled = false;
+    }
+}
+
+/* =========================================================
+   ESTADOS Y ACCIONES
+========================================================= */
+
+function updateStatus(id, newStatus) {
+    const appointments = getAppointments();
+
+    const appointment = appointments.find(
+        item => String(item.id) === String(id)
+    );
+
+    if (!appointment) {
+        showToast("No se encontró la cita.");
+        return;
+    }
+
+    if (appointment.status === "completed") {
+        showToast(
+            "Una cita completada no puede modificarse."
+        );
+        return;
+    }
+
+    if (!Object.hasOwn(STATUS_LABELS, newStatus)) {
+        return;
+    }
+
+    if (
+        ["cancelled", "no-show"].includes(
+            appointment.status
+        ) &&
+        newStatus !== "pending"
+    ) {
+        showToast("Primero restaura la cita.");
+        return;
+    }
+
+    if (
+        newStatus === "pending" &&
+        ["cancelled", "no-show"].includes(
+            appointment.status
+        )
+    ) {
+        if (!isAppointmentAvailable(appointment)) {
+            showToast(
+                "No se puede restaurar: el horario está ocupado."
+            );
+            return;
+        }
+    }
+
+    if (newStatus === "completed") {
+        openPaymentModal(id);
+        return;
+    }
+
+    appointment.status = newStatus;
+    appointment.updatedAt = new Date().toISOString();
+
+    saveAppointments(appointments);
+    refreshAppointments();
+
+    showToast("Estado actualizado correctamente.");
+}
+
+function handleTableAction(event) {
+    const button = event.target.closest(
+        "[data-action]"
+    );
+
+    if (
+        !button ||
+        !appointmentsTable.contains(button)
+    ) {
+        return;
+    }
+
+    const id = button.dataset.id;
+    const action = button.dataset.action;
+
+    if (action === "edit") {
+        openEditAppointment(id);
+        return;
+    }
+
+    if (action === "charge") {
+        openPaymentModal(id);
+        return;
+    }
+
+    if (action === "cancelled") {
+        if (!window.confirm("¿Quieres cancelar esta cita?")) {
+            return;
+        }
+    }
+
+    updateStatus(id, action);
+}
+
+/* =========================================================
+   AGENDAR DESDE CLIENTES
+========================================================= */
+
+function handleIncomingCustomerBooking() {
+    const params = new URLSearchParams(
+        window.location.search
+    );
+
+    if (params.get("new") !== "1") {
+        return;
+    }
+
+    const stored = sessionStorage.getItem(
+        "barbershop_booking_customer"
+    );
+
+    openModal();
+
+    if (stored) {
+        try {
+            const customer = JSON.parse(stored);
+
+            nameInput.value = customer.name || "";
+            phoneInput.value = customer.phone || "";
+
+            detectCustomer();
+        } catch (error) {
+            console.error(
+                "No se pudo leer el cliente:",
+                error
+            );
+        }
+    }
+
+    sessionStorage.removeItem(
+        "barbershop_booking_customer"
+    );
+
+    window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+    );
+}
+
+/* =========================================================
+   EVENTOS
+========================================================= */
+
+function configureEvents() {
+    $("newAppointmentButton")?.addEventListener(
+        "click",
+        openModal
+    );
+
+    $("closeModalButton")?.addEventListener(
+        "click",
+        closeModal
+    );
+
+    $("cancelModalButton")?.addEventListener(
+        "click",
+        closeModal
+    );
+
+    saveButton.addEventListener(
+        "click",
+        saveAppointment
+    );
+
+    phoneInput.addEventListener(
+        "input",
+        detectCustomer
+    );
+
+    dateInput.addEventListener(
+        "change",
+        () => {
+            selectedTime = "";
+            renderTimes();
+        }
+    );
+
+    timeContainer.addEventListener(
+        "click",
+        event => {
+            const button = event.target.closest(
+                "[data-time]"
+            );
+
+            if (!button) return;
+
+            selectedTime = button.dataset.time;
+            renderTimes();
+        }
+    );
+
+    appointmentsTable.addEventListener(
+        "click",
+        handleTableAction
+    );
+
+    document.querySelectorAll(
+        ".filters .filter"
+    ).forEach(button => {
+        button.addEventListener(
+            "click",
+            () => {
+                document.querySelectorAll(
+                    ".filters .filter"
+                ).forEach(item =>
+                    item.classList.remove("active")
+                );
+
+                button.classList.add("active");
+
+                currentFilter =
+                    button.dataset.filter || "all";
+
+                renderAppointments();
+            }
+        );
+    });
+
+    modal.addEventListener(
+        "click",
+        event => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    );
+
+    document.addEventListener(
+        "keydown",
+        event => {
+            if (
+                event.key === "Escape" &&
+                paymentModal &&
+                !paymentModal.hidden
+            ) {
+                closePaymentModal();
+                return;
+            }
+
+            if (
+                event.key === "Escape" &&
+                !modal.classList.contains("hidden")
+            ) {
+                closeModal();
+            }
+        }
+    );
+
+    window.addEventListener(
+        "storage",
+        event => {
+            if (
+                [
+                    "barbershop_appointments",
+                    "barbershop_services",
+                    "barbershop_barbers"
+                ].includes(event.key)
+            ) {
+                if (
+                    [
+                        "barbershop_services",
+                        "barbershop_barbers"
+                    ].includes(event.key)
+                ) {
+                    picker.refresh();
+                    populateStaffSelector();
+                }
+
+                renderAppointments();
+                renderTimes();
+            }
+        }
+    );
+}
+
+/* =========================================================
+   INICIALIZACIÓN
+========================================================= */
+
+function initialize() {
+    picker = createMultiServicePicker({
+        serviceSelect,
+        onChange: () => {
+            populateStaffSelector();
+            selectedTime = "";
+            renderTimes();
+        }
+    });
+
+    createProfessionalPicker();
+    populateStaffSelector();
+
+    createPaymentModal();
+    configureEvents();
+
+    const params = new URLSearchParams(
+        window.location.search
+    );
+
+    const requestedFilter = params.get("filter");
+
+    const button = requestedFilter
+        ? document.querySelector(
+            `.filters .filter[data-filter="${CSS.escape(requestedFilter)}"]`
+        )
+        : null;
+
+    if (button) {
+        button.click();
+    } else {
+        renderAppointments();
+    }
+
+    handleIncomingCustomerBooking();
+}
+
+initialize();
